@@ -1,6 +1,6 @@
 # Pexels Project
 
-[![Build](https://github.com/houseme/pexels/workflows/build/badge.svg)](https://github.com/houseme/pexels/actions?query=workflow%3ABuild)
+[![Build](https://github.com/houseme/pexels/actions/workflows/build.yml/badge.svg)](https://github.com/houseme/pexels/actions/workflows/build.yml)
 [![crates.io](https://img.shields.io/crates/v/pexels-api.svg)](https://crates.io/crates/pexels-api)
 [![docs.rs](https://docs.rs/pexels-api/badge.svg)](https://docs.rs/pexels-api/)
 [![License](https://img.shields.io/crates/l/pexels-api)](../LICENSE-APACHE)

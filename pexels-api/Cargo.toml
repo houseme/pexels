@@ -11,6 +11,7 @@ repository.workspace = true
 documentation = "https://docs.rs/pexels-api"
 keywords.workspace = true
 categories.workspace = true
+readme = "README.md"
 
 [dependencies]
 reqwest.workspace = true

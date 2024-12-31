@@ -11,6 +11,7 @@ repository.workspace = true
 documentation = "https://docs.rs/pexels-cli"
 keywords.workspace = true
 categories = ["command-line-utilities", "development-tools", "asynchronous", "network-programming"]
+readme = "README.md"
 
 [dependencies]
 pexels-api.workspace = true
