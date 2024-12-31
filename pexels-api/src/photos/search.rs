@@ -12,7 +12,7 @@ const PEXELS_PHOTO_SEARCH_PATH: &str = "search";
 /// use pexels_api::{Color, Hex, SearchBuilder};
 ///
 /// fn main() -> Result<(), Box<dyn std::error::Error>> {
-///        let hex_color = Hex::from_str("#FFFFFF")?;
+///        let hex_color = Hex::from_borrowed_str("#FFFFFF")?;
 ///        let uri = SearchBuilder::new().color(Color::Hex(hex_color)).build();
 ///        assert_eq!(
 ///            "https://api.pexels.com/v1/search?query=&color=%23FFFFFF",
@@ -28,7 +28,9 @@ const PEXELS_PHOTO_SEARCH_PATH: &str = "search";
 pub struct Hex<'a>(&'a str);
 
 impl<'a> Hex<'a> {
-    pub fn from_str(v: &'a str) -> Result<Self, PexelsError> {
+    /// Create a new [`Hex`] from a string literal.
+    #[allow(clippy::should_implement_trait)]
+    pub fn from_borrowed_str(v: &'a str) -> Result<Self, PexelsError> {
         if v.len() != 7 {
             return Err(PexelsError::HexColorCodeError(format!(
                 "{} is not 7 characters long.",
@@ -51,7 +53,7 @@ impl<'a> Hex<'a> {
             )));
         }
 
-        Ok(Self { 0: v })
+        Ok(Self(v))
     }
 }
 
@@ -72,7 +74,7 @@ pub enum Color<'a> {
     Hex(Hex<'a>),
 }
 
-impl<'a> Color<'a> {
+impl Color<'_> {
     /// Get enum as string literal value
     fn as_str(&self) -> Result<&str, PexelsError> {
         let value = match self {
@@ -175,6 +177,7 @@ pub struct SearchBuilder<'a> {
 }
 
 impl<'a> SearchBuilder<'a> {
+    /// Creates a new [`SearchBuilder`].
     pub fn new() -> Self {
         Self {
             query: "",
@@ -305,7 +308,7 @@ mod tests {
 
     #[test]
     fn test_hex_color_code() {
-        let hex_color = Hex::from_str("#FFFFFF").unwrap();
+        let hex_color = Hex::from_borrowed_str("#FFFFFF").unwrap();
         let uri = SearchBuilder::new().color(Color::Hex(hex_color)).build();
         assert_eq!(
             "https://api.pexels.com/v1/search?query=&color=%23FFFFFF",
@@ -324,7 +327,7 @@ mod tests {
 
     #[test]
     fn test_hex_struct_length() {
-        let hex_color = Hex::from_str("#allanballan");
+        let hex_color = Hex::from_borrowed_str("#allanballan");
         assert_eq!(
             hex_color,
             Err(PexelsError::HexColorCodeError(String::from(
@@ -335,7 +338,7 @@ mod tests {
 
     #[test]
     fn test_hex_struct_box_validation() {
-        let hex_color = Hex::from_str("FFFFFFF");
+        let hex_color = Hex::from_borrowed_str("FFFFFFF");
         assert_eq!(
             hex_color,
             Err(PexelsError::HexColorCodeError(String::from(
@@ -346,7 +349,7 @@ mod tests {
 
     #[test]
     fn test_hex_struct_ascii_validation() {
-        let hex_color = Hex::from_str("#??????");
+        let hex_color = Hex::from_borrowed_str("#??????");
         assert_eq!(
             hex_color,
             Err(PexelsError::HexColorCodeError(String::from(

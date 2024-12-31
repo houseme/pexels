@@ -83,6 +83,7 @@ pub struct PopularBuilder {
 }
 
 impl PopularBuilder {
+    /// Creates a new [`PopularBuilder`].
     pub fn new() -> Self {
         Self {
             min_width: None,

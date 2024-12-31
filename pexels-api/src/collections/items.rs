@@ -1,5 +1,5 @@
 use crate::{
-    Pexels, PexelsError, PhotosResponse, PEXELS_API, PEXELS_COLLECTIONS_PATH, PEXELS_VERSION,
+    CollectionsResponse, Pexels, PexelsError, PEXELS_API, PEXELS_COLLECTIONS_PATH, PEXELS_VERSION,
 };
 use url::Url;
 
@@ -38,11 +38,11 @@ impl Collections {
     }
 
     /// Fetch the photo data from the Pexels API.
-    pub async fn fetch(&self, client: &Pexels) -> Result<PhotosResponse, PexelsError> {
+    pub async fn fetch(&self, client: &Pexels) -> Result<CollectionsResponse, PexelsError> {
         let url = self.create_uri()?;
         let response = client.make_request(url.as_str()).await?;
-        let photos_response: PhotosResponse = serde_json::from_value(response)?;
-        Ok(photos_response)
+        let collections_response: CollectionsResponse = serde_json::from_value(response)?;
+        Ok(collections_response)
     }
 }
 

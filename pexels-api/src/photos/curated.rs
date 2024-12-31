@@ -52,6 +52,7 @@ pub struct CuratedBuilder {
 }
 
 impl CuratedBuilder {
+    /// Creates a new [`CuratedBuilder`].
     pub fn new() -> Self {
         Self {
             page: None,

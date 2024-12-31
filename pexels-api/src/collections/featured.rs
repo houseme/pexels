@@ -6,6 +6,7 @@ use url::Url;
 /// Path to get featured collections.
 const PEXELS_FEATURED_PATH: &str = "featured";
 
+/// all featured collections on Pexels.
 pub struct Featured {
     page: Option<usize>,
     per_page: Option<usize>,
@@ -39,7 +40,7 @@ impl Featured {
         Ok(url.into())
     }
 
-    /// Fetch the photo data from the Pexels API.
+    /// Fetch the photo or video data from the Pexels API.
     pub async fn fetch(&self, client: &Pexels) -> Result<CollectionsResponse, PexelsError> {
         let url = self.create_uri()?;
         let response = client.make_request(url.as_str()).await?;

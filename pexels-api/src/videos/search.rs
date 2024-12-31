@@ -6,7 +6,9 @@ use url::Url;
 /// The path for the search endpoint.
 const PEXELS_VIDEO_SEARCH_PATH: &str = "search";
 
-/// This endpoint enables you to search Pexels for any topic that you would like. For example, your query could be something broad like Nature, Tigers, People. Or it could be something specific like Group of people working.
+/// This endpoint enables you to search Pexels for any topic that you would like.
+/// For example, your query could be something broad like Nature, Tigers, People.
+/// Or it could be something specific like Group of people working.
 pub struct Search<'a> {
     query: &'a str,
     page: Option<usize>,
@@ -80,6 +82,7 @@ pub struct SearchBuilder<'a> {
 }
 
 impl<'a> SearchBuilder<'a> {
+    /// Create a new [`SearchBuilder`].
     pub fn new() -> Self {
         Self {
             query: "",

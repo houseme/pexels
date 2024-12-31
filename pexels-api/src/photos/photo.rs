@@ -43,6 +43,7 @@ pub struct FetchPhotoBuilder {
 }
 
 impl FetchPhotoBuilder {
+    /// Create a new [`FetchPhotoBuilder`].
     pub fn new() -> Self {
         Self { id: 0 }
     }
@@ -77,11 +78,13 @@ mod tests {
 
     #[tokio::test]
     async fn test_fetch_photo() {
-        let api_key = std::env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
+        dotenv().ok();
+        let api_key = env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
         let client = Pexels::new(api_key);
 
         let get_photo = FetchPhoto::builder().id(123).build();
         let result = get_photo.fetch(&client).await;
+        println!("get_photo result: {:?}", result);
         assert!(result.is_ok());
     }
 

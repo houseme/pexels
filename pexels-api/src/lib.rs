@@ -1,27 +1,87 @@
+/*!
+The `pexels_api` crate provides API wrapper for Pexels. It based on [Pexels API Documentation](https://www.pexels.com/api/documentation/).
+
+To get the API key, you have to request the access from [Request API Access – Pexels](https://www.pexels.com/api/new/).
+
+This library depends on [serde-json](https://github.com/serde-rs/json) crate to handle the result, thus you have to read the documentation [serde_json - Rust](https://docs.serde.rs/serde_json/index.html), especially [serde_json::Value - Rust](https://docs.serde.rs/serde_json/enum.Value.html).
+
+# Setup
+
+Add this line to your `Cargo.toml` file, below `[dependencies]`
+
+```toml
+pexels_api = "*"
+```
+
+and this to your crate root file e.g. `main.rs`:
+
+```rust
+use pexels_api;
+```
+
+Done! Now you can use this API wrapper.
+
+# Example
+
+This example shows how to get the list of *mountains* photos.
+
+```rust
+use dotenv::dotenv;
+use std::env;
+use pexels_api::{Pexels,SearchBuilder};
+
+dotenv().ok();
+let api_key = env::var("PEXELS_API_KEY")?;
+let pexels_api_client = Pexels::new(api_key);
+let builder = SearchBuilder::new()
+    .query("mountains")
+    .per_page(15)
+    .page(1);
+pexels_api_client.search_photos(builder);
+
+```
+
+and you can run it using `cargo run`! Simply as that.
+
+# Random photo
+
+If you want to get a random photo, you can use the `curated_photo` function and set per_page to 1 and page to a random number between 1 and 1000 to get a beautiful random photo. You can do the same with popular searches if you want to get a random photo with a specific topic.
+
+# Image formats
+
+* original - The size of the original image is given with the attribute width and height.
+* large - This image has a maximum width of 940px and a maximum height of 650px. It has the aspect ratio of the original image.
+* large2x - This image has a maximum width of 1880px and a maximum height of 1300px. It has the aspect ratio of the original image.
+* medium - This image has a height of 350px and a flexible width. It has the aspect ratio of the original image.
+* small - This image has a height of 130px and a flexible width. It has the aspect ratio of the original image.
+* portrait    This image has a width of 800px and a height of 1200px.
+* landscape - This image has a width of 1200px and height of 627px.
+* tiny - This image has a width of 280px and height of 200px.
+*/
 mod collections;
 mod domain;
 mod photos;
 mod videos;
 
 /// collections module
-pub use collections::collections::Collections;
-pub use collections::collections::CollectionsBuilder;
 pub use collections::featured::Featured;
 pub use collections::featured::FeaturedBuilder;
+pub use collections::items::Collections;
+pub use collections::items::CollectionsBuilder;
 pub use collections::media::Media;
 pub use collections::media::MediaBuilder;
 /// domain module
-pub use domain::domain::Collection;
-pub use domain::domain::CollectionsResponse;
-pub use domain::domain::MediaResponse;
-pub use domain::domain::Photo;
-pub use domain::domain::PhotoSrc;
-pub use domain::domain::PhotosResponse;
-pub use domain::domain::User;
-pub use domain::domain::Video;
-pub use domain::domain::VideoFile;
-pub use domain::domain::VideoPicture;
-pub use domain::domain::VideoResponse;
+pub use domain::models::Collection;
+pub use domain::models::CollectionsResponse;
+pub use domain::models::MediaResponse;
+pub use domain::models::Photo;
+pub use domain::models::PhotoSrc;
+pub use domain::models::PhotosResponse;
+pub use domain::models::User;
+pub use domain::models::Video;
+pub use domain::models::VideoFile;
+pub use domain::models::VideoPicture;
+pub use domain::models::VideoResponse;
 /// photos module
 pub use photos::curated::Curated;
 pub use photos::curated::CuratedBuilder;
@@ -44,6 +104,8 @@ use reqwest::Client;
 use reqwest::Error as ReqwestError;
 use serde_json::Error as JsonError;
 use serde_json::Value;
+use std::env::VarError;
+use std::str::FromStr;
 use thiserror::Error;
 use url::ParseError;
 
@@ -60,6 +122,7 @@ const PEXELS_COLLECTIONS_PATH: &str = "collections";
 const PEXELS_API: &str = "https://api.pexels.com";
 
 /// Desired photo orientation.
+#[derive(PartialEq, Debug)]
 pub enum Orientation {
     Landscape,
     Portrait,
@@ -76,7 +139,22 @@ impl Orientation {
     }
 }
 
-/// the sort for media
+impl FromStr for Orientation {
+    type Err = PexelsError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "landscape" => Ok(Orientation::Landscape),
+            "portrait" => Ok(Orientation::Portrait),
+            "square" => Ok(Orientation::Square),
+            _ => Err(PexelsError::ParseMediaSortError),
+        }
+    }
+}
+
+/// The order of items in the media collection.
+/// Supported values are: asc, desc. Default: asc
+#[derive(PartialEq, Debug)]
 pub enum MediaSort {
     Asc,
     Desc,
@@ -91,10 +169,26 @@ impl MediaSort {
     }
 }
 
-// The type for media
+impl FromStr for MediaSort {
+    type Err = PexelsError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "asc" => Ok(MediaSort::Asc),
+            "desc" => Ok(MediaSort::Desc),
+            _ => Err(PexelsError::ParseMediaSortError),
+        }
+    }
+}
+
+/// The type of media you are requesting.
+/// If not given or if given with an invalid value, all media will be returned.
+/// Supported values are photos and videos.
+#[derive(PartialEq, Debug)]
 pub enum MediaType {
     Photo,
     Video,
+    Empty,
 }
 
 impl MediaType {
@@ -102,6 +196,20 @@ impl MediaType {
         match self {
             MediaType::Photo => "photos",
             MediaType::Video => "videos",
+            MediaType::Empty => "",
+        }
+    }
+}
+
+impl FromStr for MediaType {
+    type Err = PexelsError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "photo" => Ok(MediaType::Photo),
+            "video" => Ok(MediaType::Video),
+            "" => Ok(MediaType::Empty),
+            _ => Err(PexelsError::ParseMediaTypeError),
         }
     }
 }
@@ -201,12 +309,20 @@ pub enum PexelsError {
     RequestError(#[from] ReqwestError),
     #[error("Failed to parse JSON response: {0}")]
     JsonParseError(#[from] JsonError),
+    #[error("API key not found in environment variables: {0}")]
+    EnvVarError(#[from] VarError),
     #[error("API key not found in environment variables")]
     ApiKeyNotFound,
     #[error("Failed to parse URL: {0}")]
     ParseError(#[from] ParseError),
     #[error("Invalid hex color code: {0}")]
     HexColorCodeError(String),
+    #[error("Failed to parse media type: invalid value")]
+    ParseMediaTypeError,
+    #[error("Failed to parse media sort: invalid value")]
+    ParseMediaSortError,
+    #[error("Failed to parse orientation: invalid value")]
+    ParseOrientationError,
 }
 
 // Manual implementation PartialEq
@@ -265,11 +381,58 @@ impl Pexels {
             .await?;
         Ok(json_response)
     }
+
+    /// Get the list of photos from the Pexels API.
+    pub async fn search_photos(
+        &self,
+        builder: SearchBuilder<'_>,
+    ) -> Result<PhotosResponse, PexelsError> {
+        builder.build().fetch(self).await
+    }
+
+    /// get_photo
+    pub async fn get_photo(&self, id: usize) -> Result<Photo, PexelsError> {
+        FetchPhotoBuilder::new().id(id).build().fetch(self).await
+    }
+
+    /// Get the list of videos from the Pexels API.
+    pub async fn search_videos(
+        &self,
+        builder: VideoSearchBuilder<'_>,
+    ) -> Result<VideoResponse, PexelsError> {
+        builder.build().fetch(self).await
+    }
+
+    /// get_video
+    pub async fn get_video(&self, id: usize) -> Result<Video, PexelsError> {
+        FetchVideoBuilder::new().id(id).build().fetch(self).await
+    }
+
+    /// search_collections
+    pub async fn search_collections(
+        &self,
+        per_page: usize,
+        page: usize,
+    ) -> Result<CollectionsResponse, PexelsError> {
+        CollectionsBuilder::new()
+            .per_page(per_page)
+            .page(page)
+            .build()
+            .fetch(self)
+            .await
+    }
+
+    /// returns all the media (photos and videos) within a single collection.
+    /// You can filter to only receive photos or videos using the type parameter.
+    pub async fn search_media(&self, builder: MediaBuilder) -> Result<MediaResponse, PexelsError> {
+        builder.build().fetch(self).await
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use dotenv::dotenv;
 
     #[test]
     fn test_pexels_error_partial_eq() {
@@ -289,5 +452,36 @@ mod tests {
         let err11 = PexelsError::ApiKeyNotFound;
         let err12 = PexelsError::HexColorCodeError(String::from("Invalid color"));
         assert_ne!(err11, err12);
+    }
+
+    #[test]
+    fn test_parse_photo() {
+        let input = "photo";
+        let media_type = input.parse::<MediaType>();
+        assert_eq!(media_type, Ok(MediaType::Photo));
+    }
+
+    #[test]
+    fn test_parse_video() {
+        let input = "video";
+        let media_type = input.parse::<MediaType>();
+        assert_eq!(media_type, Ok(MediaType::Video));
+    }
+
+    #[test]
+    fn test_parse_invalid() {
+        let input = "audio";
+        let media_type = input.parse::<MediaType>();
+        assert!(matches!(media_type, Err(PexelsError::ParseMediaTypeError)));
+    }
+
+    #[tokio::test]
+    async fn test_make_request() {
+        dotenv().ok();
+        let api_key = std::env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
+        let client = Pexels::new(api_key);
+        let url = "https://api.pexels.com/v1/curated";
+        let response = client.make_request(url).await;
+        assert!(response.is_ok());
     }
 }

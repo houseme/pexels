@@ -4,6 +4,9 @@ use crate::{
 };
 use url::Url;
 
+/// Retrieve a specific Media from its id.
+/// This endpoint returns all the media (photos and videos) within a single collection.
+/// You can filter to only receive photos or videos using the type parameter.
 pub struct Media {
     id: String,
     r#type: Option<LibType>,
@@ -13,10 +16,12 @@ pub struct Media {
 }
 
 impl Media {
+    /// Creates [`MediaBuilder`] for building URI's.
     pub fn builder() -> MediaBuilder {
         MediaBuilder::new()
     }
 
+    /// Create URI from inputted vales from the [`MediaBuilder`].
     pub fn create_uri(&self) -> crate::BuilderResult {
         let uri = format!(
             "{}/{}/{}/{}",
@@ -26,7 +31,12 @@ impl Media {
         let mut url = Url::parse(uri.as_str())?;
 
         if let Some(r#type) = &self.r#type {
-            url.query_pairs_mut().append_pair("type", r#type.as_str());
+            match r#type {
+                LibType::Empty => {}
+                _ => {
+                    url.query_pairs_mut().append_pair("type", r#type.as_str());
+                }
+            }
         }
 
         if let Some(sort) = &self.sort {
@@ -46,6 +56,7 @@ impl Media {
         Ok(url.into())
     }
 
+    /// Fetch the photo or video data from the Pexels API.
     pub async fn fetch(&self, client: &Pexels) -> Result<MediaResponse, PexelsError> {
         let url = self.create_uri()?;
         let response = client.make_request(url.as_str()).await?;
@@ -54,6 +65,7 @@ impl Media {
     }
 }
 
+/// Builder for [`Media`].
 #[derive(Default)]
 pub struct MediaBuilder {
     id: String,
@@ -72,6 +84,11 @@ impl MediaBuilder {
             page: None,
             per_page: None,
         }
+    }
+
+    pub fn id(mut self, id: String) -> Self {
+        self.id = id;
+        self
     }
 
     pub fn r#type(mut self, r#type: LibType) -> Self {

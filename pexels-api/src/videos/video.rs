@@ -42,6 +42,7 @@ pub struct FetchVideoBuilder {
 }
 
 impl FetchVideoBuilder {
+    /// Create a new [`FetchVideoBuilder`].
     pub fn new() -> Self {
         Self { id: 0 }
     }
