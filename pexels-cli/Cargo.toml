@@ -19,3 +19,8 @@ dotenv.workspace = true
 tokio.workspace = true
 
 [dev-dependencies]
+tokio.workspace = true
+
+[[bin]]
+name = "pexels-cli"
+path = "src/main.rs"

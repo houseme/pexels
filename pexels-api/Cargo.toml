@@ -23,3 +23,7 @@ url.workspace = true
 [dev-dependencies]
 dotenv.workspace = true
 tokio.workspace = true
+
+[lib]
+name = "pexels_api"
+path = "src/lib.rs"

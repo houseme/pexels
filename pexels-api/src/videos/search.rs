@@ -6,9 +6,9 @@ use url::Url;
 /// The path for the search endpoint.
 const PEXELS_VIDEO_SEARCH_PATH: &str = "search";
 
-/// This endpoint enables you to search Pexels for any topic that you would like.
-/// For example, your query could be something broad like Nature, Tigers, People.
-/// Or it could be something specific like Group of people working.
+/// This endpoint allows you to search Pexels for any topic.
+/// For example, your query could be broad like \`Nature\`, \`Tigers\`, \`People\`,
+/// or specific like \`Group of people working\`.
 pub struct Search<'a> {
     query: &'a str,
     page: Option<usize>,
@@ -26,28 +26,22 @@ impl<'a> Search<'a> {
 
     /// Create URI from inputted vales from the [`SearchBuilder`].
     pub fn create_uri(&self) -> crate::BuilderResult {
-        let uri = format!(
-            "{}/{}/{}",
-            PEXELS_API, PEXELS_VIDEO_PATH, PEXELS_VIDEO_SEARCH_PATH
-        );
+        let uri = format!("{}/{}/{}", PEXELS_API, PEXELS_VIDEO_PATH, PEXELS_VIDEO_SEARCH_PATH);
 
         let mut url = Url::parse(uri.as_str())?;
 
         url.query_pairs_mut().append_pair("query", self.query);
 
         if let Some(page) = &self.page {
-            url.query_pairs_mut()
-                .append_pair("page", page.to_string().as_str());
+            url.query_pairs_mut().append_pair("page", page.to_string().as_str());
         }
 
         if let Some(per_page) = &self.per_page {
-            url.query_pairs_mut()
-                .append_pair("per_page", per_page.to_string().as_str());
+            url.query_pairs_mut().append_pair("per_page", per_page.to_string().as_str());
         }
 
         if let Some(orientation) = &self.orientation {
-            url.query_pairs_mut()
-                .append_pair("orientation", orientation.as_str());
+            url.query_pairs_mut().append_pair("orientation", orientation.as_str());
         }
 
         if let Some(size) = &self.size {
@@ -61,7 +55,7 @@ impl<'a> Search<'a> {
         Ok(url.into())
     }
 
-    /// Fetch the video list data from the Pexels API.
+    /// Fetches the list of videos based on the search query from the Pexels API.
     pub async fn fetch(&self, client: &Pexels) -> Result<VideoResponse, PexelsError> {
         let url = self.create_uri()?;
         let response = client.make_request(url.as_str()).await?;
@@ -84,14 +78,7 @@ pub struct SearchBuilder<'a> {
 impl<'a> SearchBuilder<'a> {
     /// Create a new [`SearchBuilder`].
     pub fn new() -> Self {
-        Self {
-            query: "",
-            page: None,
-            per_page: None,
-            orientation: None,
-            size: None,
-            locale: None,
-        }
+        Self { query: "", page: None, per_page: None, orientation: None, size: None, locale: None }
     }
 
     /// The search query.
@@ -152,19 +139,13 @@ mod tests {
     #[test]
     fn test_query() {
         let uri = SearchBuilder::new().query("bar").build();
-        assert_eq!(
-            "https://api.pexels.com/videos/search?query=bar",
-            uri.create_uri().unwrap()
-        );
+        assert_eq!("https://api.pexels.com/videos/search?query=bar", uri.create_uri().unwrap());
     }
 
     #[test]
     fn test_page() {
         let uri = SearchBuilder::new().page(1).build();
-        assert_eq!(
-            "https://api.pexels.com/videos/search?query=&page=1",
-            uri.create_uri().unwrap()
-        );
+        assert_eq!("https://api.pexels.com/videos/search?query=&page=1", uri.create_uri().unwrap());
     }
 
     #[test]
@@ -178,9 +159,7 @@ mod tests {
 
     #[test]
     fn test_orientation() {
-        let uri = SearchBuilder::new()
-            .orientation(Orientation::Landscape)
-            .build();
+        let uri = SearchBuilder::new().orientation(Orientation::Landscape).build();
         assert_eq!(
             "https://api.pexels.com/videos/search?query=&orientation=landscape",
             uri.create_uri().unwrap()

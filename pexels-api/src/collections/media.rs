@@ -4,9 +4,9 @@ use crate::{
 };
 use url::Url;
 
-/// Retrieve a specific Media from its id.
-/// This endpoint returns all the media (photos and videos) within a single collection.
-/// You can filter to only receive photos or videos using the type parameter.
+/// Retrieve a specific media item by its ID.
+/// This endpoint returns all media items (photos and videos) within a single collection.
+/// Use the `type` parameter to filter results to only photos or only videos.
 pub struct Media {
     id: String,
     r#type: Option<LibType>,
@@ -23,10 +23,8 @@ impl Media {
 
     /// Create URI from inputted vales from the [`MediaBuilder`].
     pub fn create_uri(&self) -> crate::BuilderResult {
-        let uri = format!(
-            "{}/{}/{}/{}",
-            PEXELS_API, PEXELS_VERSION, PEXELS_COLLECTIONS_PATH, self.id
-        );
+        let uri =
+            format!("{}/{}/{}/{}", PEXELS_API, PEXELS_VERSION, PEXELS_COLLECTIONS_PATH, self.id);
 
         let mut url = Url::parse(uri.as_str())?;
 
@@ -44,13 +42,11 @@ impl Media {
         }
 
         if let Some(page) = &self.page {
-            url.query_pairs_mut()
-                .append_pair("page", page.to_string().as_str());
+            url.query_pairs_mut().append_pair("page", page.to_string().as_str());
         }
 
         if let Some(per_page) = &self.per_page {
-            url.query_pairs_mut()
-                .append_pair("per_page", per_page.to_string().as_str());
+            url.query_pairs_mut().append_pair("per_page", per_page.to_string().as_str());
         }
 
         Ok(url.into())
@@ -77,13 +73,7 @@ pub struct MediaBuilder {
 
 impl MediaBuilder {
     pub fn new() -> Self {
-        Self {
-            id: "".to_string(),
-            r#type: None,
-            sort: None,
-            page: None,
-            per_page: None,
-        }
+        Self { id: "".to_string(), r#type: None, sort: None, page: None, per_page: None }
     }
 
     pub fn id(mut self, id: String) -> Self {

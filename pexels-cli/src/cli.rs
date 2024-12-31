@@ -1,11 +1,7 @@
 use clap::{Parser, Subcommand};
 
 #[derive(Parser, Debug)]
-#[clap(
-    name = "pexels-cli",
-    version = "0.1.0",
-    about = "A CLI for interacting with the Pexels API"
-)]
+#[clap(name = "pexels-cli", version = "0.0.1", about = "A CLI for interacting with the Pexels API")]
 pub struct Cli {
     #[clap(subcommand)]
     pub command: Command,

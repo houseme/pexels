@@ -3,7 +3,7 @@ use url::Url;
 /// Path to get a specific video.
 const PEXELS_GET_VIDEO_PATH: &str = "videos";
 
-/// Retrieve a specific Video from its id.
+/// Retrieve a specific video from its ID.
 pub struct FetchVideo {
     id: usize,
 }
@@ -16,10 +16,8 @@ impl FetchVideo {
 
     /// Create URI from inputed vales from the [`FetchVideoBuilder`].
     pub fn create_uri(&self) -> crate::BuilderResult {
-        let uri = format!(
-            "{}/{}/{}/{}",
-            PEXELS_API, PEXELS_VIDEO_PATH, PEXELS_GET_VIDEO_PATH, self.id
-        );
+        let uri =
+            format!("{}/{}/{}/{}", PEXELS_API, PEXELS_VIDEO_PATH, PEXELS_GET_VIDEO_PATH, self.id);
 
         let url = Url::parse(uri.as_str())?;
 
@@ -66,9 +64,6 @@ mod tests {
     #[test]
     fn test_id() {
         let uri = FetchVideoBuilder::new().id(123).build();
-        assert_eq!(
-            "https://api.pexels.com/videos/videos/123",
-            uri.create_uri().unwrap()
-        );
+        assert_eq!("https://api.pexels.com/videos/videos/123", uri.create_uri().unwrap());
     }
 }

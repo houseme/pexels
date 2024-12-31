@@ -11,10 +11,7 @@ pub async fn search_photos(
 ) -> Result<PhotosResponse, PexelsError> {
     let api_key = env::var("PEXELS_API_KEY")?;
     let client = Pexels::new(api_key);
-    let builder = SearchBuilder::new()
-        .query(query)
-        .per_page(per_page)
-        .page(page);
+    let builder = SearchBuilder::new().query(query).per_page(per_page).page(page);
     let photos = client.search_photos(builder).await?;
     Ok(photos)
 }
@@ -26,10 +23,7 @@ pub async fn search_videos(
 ) -> Result<VideoResponse, PexelsError> {
     let api_key = env::var("PEXELS_API_KEY")?;
     let client = Pexels::new(api_key);
-    let builder = VideoSearchBuilder::new()
-        .query(query)
-        .per_page(per_page)
-        .page(page);
+    let builder = VideoSearchBuilder::new().query(query).per_page(per_page).page(page);
     let videos = client.search_videos(builder).await?;
     Ok(videos)
 }
@@ -67,12 +61,8 @@ pub async fn search_media(
 ) -> Result<MediaResponse, PexelsError> {
     let api_key = env::var("PEXELS_API_KEY")?;
     let client = Pexels::new(api_key);
-    let builder = MediaBuilder::new()
-        .id(id)
-        .per_page(per_page)
-        .page(page)
-        .r#type(r#type)
-        .sort(sort);
+    let builder =
+        MediaBuilder::new().id(id).per_page(per_page).page(page).r#type(r#type).sort(sort);
     let media_response = client.search_media(builder).await?;
     Ok(media_response)
 }

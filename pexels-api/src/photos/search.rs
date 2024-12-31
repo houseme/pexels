@@ -32,17 +32,11 @@ impl<'a> Hex<'a> {
     #[allow(clippy::should_implement_trait)]
     pub fn from_borrowed_str(v: &'a str) -> Result<Self, PexelsError> {
         if v.len() != 7 {
-            return Err(PexelsError::HexColorCodeError(format!(
-                "{} is not 7 characters long.",
-                v
-            )));
+            return Err(PexelsError::HexColorCodeError(format!("{} is not 7 characters long.", v)));
         }
 
         if !v.starts_with("#") {
-            return Err(PexelsError::HexColorCodeError(format!(
-                "{} does not start with #.",
-                v
-            )));
+            return Err(PexelsError::HexColorCodeError(format!("{} does not start with #.", v)));
         }
 
         // 检查是否为有效的 ASCII 字符
@@ -116,28 +110,21 @@ impl<'a> Search<'a> {
 
     /// Create URI from inputted vales from the [`SearchBuilder`].
     pub fn create_uri(&self) -> crate::BuilderResult {
-        let uri = format!(
-            "{}/{}/{}",
-            PEXELS_API, PEXELS_VERSION, PEXELS_PHOTO_SEARCH_PATH
-        );
+        let uri = format!("{}/{}/{}", PEXELS_API, PEXELS_VERSION, PEXELS_PHOTO_SEARCH_PATH);
 
         let mut url = Url::parse(uri.as_str())?;
-
         url.query_pairs_mut().append_pair("query", self.query);
 
         if let Some(page) = &self.page {
-            url.query_pairs_mut()
-                .append_pair("page", page.to_string().as_str());
+            url.query_pairs_mut().append_pair("page", page.to_string().as_str());
         }
 
         if let Some(per_page) = &self.per_page {
-            url.query_pairs_mut()
-                .append_pair("per_page", per_page.to_string().as_str());
+            url.query_pairs_mut().append_pair("per_page", per_page.to_string().as_str());
         }
 
         if let Some(orientation) = &self.orientation {
-            url.query_pairs_mut()
-                .append_pair("orientation", orientation.as_str());
+            url.query_pairs_mut().append_pair("orientation", orientation.as_str());
         }
 
         if let Some(size) = &self.size {
@@ -155,7 +142,7 @@ impl<'a> Search<'a> {
         Ok(url.into())
     }
 
-    /// Fetch the photo data list from the Pexels API.
+    /// Fetches the list of photos from the Pexels API based on the search parameters.
     pub async fn fetch(&self, client: &Pexels) -> Result<PhotosResponse, PexelsError> {
         let url = self.create_uri()?;
         let response = client.make_request(url.as_str()).await?;
@@ -253,35 +240,24 @@ mod tests {
     #[test]
     fn test_query() {
         let uri = SearchBuilder::new().query("bar").build();
-        assert_eq!(
-            "https://api.pexels.com/v1/search?query=bar",
-            uri.create_uri().unwrap()
-        );
+        assert_eq!("https://api.pexels.com/v1/search?query=bar", uri.create_uri().unwrap());
     }
 
     #[test]
     fn test_page() {
         let uri = SearchBuilder::new().page(1).build();
-        assert_eq!(
-            "https://api.pexels.com/v1/search?query=&page=1",
-            uri.create_uri().unwrap()
-        );
+        assert_eq!("https://api.pexels.com/v1/search?query=&page=1", uri.create_uri().unwrap());
     }
 
     #[test]
     fn test_per_page() {
         let uri = SearchBuilder::new().per_page(1).build();
-        assert_eq!(
-            "https://api.pexels.com/v1/search?query=&per_page=1",
-            uri.create_uri().unwrap()
-        );
+        assert_eq!("https://api.pexels.com/v1/search?query=&per_page=1", uri.create_uri().unwrap());
     }
 
     #[test]
     fn test_orientation() {
-        let uri = SearchBuilder::new()
-            .orientation(Orientation::Landscape)
-            .build();
+        let uri = SearchBuilder::new().orientation(Orientation::Landscape).build();
         assert_eq!(
             "https://api.pexels.com/v1/search?query=&orientation=landscape",
             uri.create_uri().unwrap()
@@ -291,19 +267,13 @@ mod tests {
     #[test]
     fn test_size() {
         let uri = SearchBuilder::new().size(Size::Small).build();
-        assert_eq!(
-            "https://api.pexels.com/v1/search?query=&size=small",
-            uri.create_uri().unwrap()
-        );
+        assert_eq!("https://api.pexels.com/v1/search?query=&size=small", uri.create_uri().unwrap());
     }
 
     #[test]
     fn test_color() {
         let uri = SearchBuilder::new().color(Color::Pink).build();
-        assert_eq!(
-            "https://api.pexels.com/v1/search?query=&color=pink",
-            uri.create_uri().unwrap()
-        );
+        assert_eq!("https://api.pexels.com/v1/search?query=&color=pink", uri.create_uri().unwrap());
     }
 
     #[test]
@@ -341,9 +311,7 @@ mod tests {
         let hex_color = Hex::from_borrowed_str("FFFFFFF");
         assert_eq!(
             hex_color,
-            Err(PexelsError::HexColorCodeError(String::from(
-                "FFFFFFF does not start with #."
-            )))
+            Err(PexelsError::HexColorCodeError(String::from("FFFFFFF does not start with #.")))
         );
     }
 

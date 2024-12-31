@@ -30,15 +30,18 @@ use dotenv::dotenv;
 use std::env;
 use pexels_api::{Pexels,SearchBuilder};
 
-dotenv().ok();
-let api_key = env::var("PEXELS_API_KEY")?;
-let pexels_api_client = Pexels::new(api_key);
-let builder = SearchBuilder::new()
-    .query("mountains")
-    .per_page(15)
-    .page(1);
-pexels_api_client.search_photos(builder);
-
+#[tokio::main]
+async fn main() {
+    dotenv().ok();
+    let api_key = env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
+    let pexels_api_client = Pexels::new(api_key);
+    let builder = SearchBuilder::new()
+        .query("mountains")
+        .per_page(15)
+        .page(1);
+    let response = pexels_api_client.search_photos(builder).await.expect("Failed to get photos");
+    println!("{:?}", response);
+}
 ```
 
 and you can run it using `cargo run`! Simply as that.
@@ -54,7 +57,7 @@ If you want to get a random photo, you can use the `curated_photo` function and 
 * large2x - This image has a maximum width of 1880px and a maximum height of 1300px. It has the aspect ratio of the original image.
 * medium - This image has a height of 350px and a flexible width. It has the aspect ratio of the original image.
 * small - This image has a height of 130px and a flexible width. It has the aspect ratio of the original image.
-* portrait    This image has a width of 800px and a height of 1200px.
+* portrait - This image has a width of 800px and a height of 1200px.
 * landscape - This image has a width of 1200px and height of 627px.
 * tiny - This image has a width of 280px and height of 200px.
 */
@@ -99,7 +102,7 @@ pub use videos::search::SearchBuilder as VideoSearchBuilder;
 pub use videos::video::FetchVideo;
 pub use videos::video::FetchVideoBuilder;
 
-
+/// import crate
 use reqwest::Client;
 use reqwest::Error as ReqwestError;
 use serde_json::Error as JsonError;
@@ -299,6 +302,19 @@ impl Size {
     }
 }
 
+impl FromStr for Size {
+    type Err = PexelsError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "large" => Ok(Size::Large),
+            "medium" => Ok(Size::Medium),
+            "small" => Ok(Size::Small),
+            _ => Err(PexelsError::ParseSizeError),
+        }
+    }
+}
+
 /// Builder result type
 pub(crate) type BuilderResult = Result<String, PexelsError>;
 
@@ -323,6 +339,8 @@ pub enum PexelsError {
     ParseMediaSortError,
     #[error("Failed to parse orientation: invalid value")]
     ParseOrientationError,
+    #[error("Failed to parse size: invalid value")]
+    ParseSizeError,
 }
 
 // Manual implementation PartialEq
@@ -360,16 +378,16 @@ pub struct Pexels {
 }
 
 impl Pexels {
+    /// Create a new Pexels client.
     pub fn new(api_key: String) -> Self {
-        Pexels {
-            client: Client::new(),
-            api_key,
-        }
+        Pexels { client: Client::new(), api_key }
     }
 
-    /// Unified HTTP request method
-    /// # Errors    
-    /// If the request fails, an error is returned.  
+    /// Sends an HTTP GET request to the specified URL and returns the JSON response.
+    /// Utilizes the `reqwest` crate for making HTTP requests.
+    ///
+    /// # Errors
+    /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
     async fn make_request(&self, url: &str) -> Result<Value, PexelsError> {
         let json_response = self
             .client
@@ -382,7 +400,13 @@ impl Pexels {
         Ok(json_response)
     }
 
-    /// Get the list of photos from the Pexels API.
+    /// Retrieves a list of photos from the Pexels API based on the search criteria.
+    ///
+    /// # Arguments
+    /// * `builder` - A `SearchBuilder` instance with the search parameters.
+    ///
+    /// # Errors
+    /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
     pub async fn search_photos(
         &self,
         builder: SearchBuilder<'_>,
@@ -390,12 +414,24 @@ impl Pexels {
         builder.build().fetch(self).await
     }
 
-    /// get_photo
+    /// Retrieves a photo by its ID from the Pexels API.
+    ///
+    /// # Arguments
+    /// * `id` - The ID of the photo to retrieve.
+    ///
+    /// # Errors
+    /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
     pub async fn get_photo(&self, id: usize) -> Result<Photo, PexelsError> {
         FetchPhotoBuilder::new().id(id).build().fetch(self).await
     }
 
-    /// Get the list of videos from the Pexels API.
+    /// Retrieves a list of videos from the Pexels API based on the search criteria.
+    ///
+    /// # Arguments
+    /// * `builder` - A `VideoSearchBuilder` instance with the search parameters.
+    ///
+    /// # Errors
+    /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
     pub async fn search_videos(
         &self,
         builder: VideoSearchBuilder<'_>,
@@ -403,27 +439,40 @@ impl Pexels {
         builder.build().fetch(self).await
     }
 
-    /// get_video
+    /// Retrieves a video by its ID from the Pexels API.
+    ///
+    /// # Arguments
+    /// * `id` - The ID of the video to retrieve.
+    ///
+    /// # Errors
+    /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
     pub async fn get_video(&self, id: usize) -> Result<Video, PexelsError> {
         FetchVideoBuilder::new().id(id).build().fetch(self).await
     }
 
-    /// search_collections
+    /// Retrieves a list of collections from the Pexels API.
+    ///
+    /// # Arguments
+    /// * `per_page` - The number of collections to retrieve per page.
+    /// * `page` - The page number to retrieve.
+    ///
+    /// # Errors
+    /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
     pub async fn search_collections(
         &self,
         per_page: usize,
         page: usize,
     ) -> Result<CollectionsResponse, PexelsError> {
-        CollectionsBuilder::new()
-            .per_page(per_page)
-            .page(page)
-            .build()
-            .fetch(self)
-            .await
+        CollectionsBuilder::new().per_page(per_page).page(page).build().fetch(self).await
     }
 
-    /// returns all the media (photos and videos) within a single collection.
-    /// You can filter to only receive photos or videos using the type parameter.
+    /// Retrieves all media (photos and videos) within a single collection.
+    ///
+    /// # Arguments
+    /// * `builder` - A `MediaBuilder` instance with the search parameters.
+    ///
+    /// # Errors
+    /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
     pub async fn search_media(&self, builder: MediaBuilder) -> Result<MediaResponse, PexelsError> {
         builder.build().fetch(self).await
     }

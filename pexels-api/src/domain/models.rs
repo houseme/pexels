@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-/// returns collections list
+/// Represents the response for a list of collections.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct CollectionsResponse {
     pub collections: Vec<Collection>,
@@ -11,8 +11,7 @@ pub struct CollectionsResponse {
     pub prev_page: Option<String>,
 }
 
-/// The Collection resource is a JSON formatted version of a Pexels collection.
-/// The Collection list endpoint responds with the collection data formatted in this shape.
+/// Represents a Pexels collection.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Collection {
     pub id: String,
@@ -24,7 +23,7 @@ pub struct Collection {
     pub videos_count: u32,
 }
 
-/// Collection Media response
+/// Represents the response for a list of media items.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MediaResponse {
     pub id: String,
@@ -36,7 +35,7 @@ pub struct MediaResponse {
     pub prev_page: Option<String>,
 }
 
-/// The type of media you are requesting.
+/// Enum representing the type of media.
 /// Supported values are `photos` and `videos`.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum MediaType {
@@ -44,7 +43,7 @@ pub enum MediaType {
     Video(MediaVideo),
 }
 
-/// A Video of media objects.
+/// Represents a photo media object.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MediaPhoto {
     pub type_: String,
@@ -60,7 +59,7 @@ pub struct MediaPhoto {
     pub liked: bool,
 }
 
-/// A Video of media objects.
+/// Represents a video media object.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MediaVideo {
     pub type_: String,
@@ -78,8 +77,7 @@ pub struct MediaVideo {
     pub video_pictures: Vec<VideoPicture>,
 }
 
-/// The Photo resource is a JSON formatted version of a Pexels photo.
-/// The Photo API endpoints respond with the photo data formatted in this shape.
+/// Represents a Pexels photo.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Photo {
     pub id: u32,
@@ -95,7 +93,7 @@ pub struct Photo {
     pub alt: String,
 }
 
-/// An assortment of different image sizes that can be used to display this Photo.
+/// Represents different image sizes for a photo.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct PhotoSrc {
     pub original: String,
@@ -108,9 +106,7 @@ pub struct PhotoSrc {
     pub tiny: String,
 }
 
-/// This endpoint enables you to search Pexels for any topic that you would like.
-/// For example, your query could be something broad like Nature, Tigers, People.
-/// Or it could be something specific like a Group of people working.
+/// Represents the response for a list of photos.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct PhotosResponse {
     pub total_results: u32,
@@ -121,8 +117,7 @@ pub struct PhotosResponse {
     pub prev_page: Option<String>,
 }
 
-/// The Video resource is a JSON formatted version of a Pexels video.
-/// The Video API endpoints respond with the video data formatted in this shape.
+/// Represents a Pexels video.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Video {
     pub id: u32,
@@ -138,9 +133,7 @@ pub struct Video {
     pub video_pictures: Vec<VideoPicture>,
 }
 
-/// This endpoint enables you to search Pexels for any topic that you would like.
-/// For example, your query could be something broad like Nature, Tigers, People.
-/// Or it could be something specific like a Group of people working.
+/// Represents the response for a list of videos.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct VideoResponse {
     pub page: u32,
@@ -152,7 +145,7 @@ pub struct VideoResponse {
     pub next_page: Option<String>,
 }
 
-/// The videographer who shot the video.
+/// Represents a user who created a media item.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct User {
     pub id: u32,
@@ -160,7 +153,7 @@ pub struct User {
     pub url: String,
 }
 
-/// An array of different sized versions of the video.
+/// Represents a video file with different qualities.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct VideoFile {
     pub id: u32,
@@ -172,7 +165,7 @@ pub struct VideoFile {
     pub link: String,
 }
 
-/// An array of preview pictures of the video.
+/// Represents a preview picture of a video.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct VideoPicture {
     pub id: u32,

@@ -15,19 +15,17 @@ impl FetchPhoto {
         FetchPhotoBuilder::default()
     }
 
-    /// Create URI from inputed vales from the [`FetchPhotoBuilder`].
+    /// Creates a URI from the values provided by the [`FetchPhotoBuilder`].
     pub fn create_uri(&self) -> crate::BuilderResult {
-        let uri = format!(
-            "{}/{}/{}/{}",
-            PEXELS_API, PEXELS_VERSION, PEXELS_GET_PHOTO_PATH, self.id
-        );
+        let uri =
+            format!("{}/{}/{}/{}", PEXELS_API, PEXELS_VERSION, PEXELS_GET_PHOTO_PATH, self.id);
 
         let url = Url::parse(uri.as_str())?;
 
         Ok(url.into())
     }
 
-    /// Fetch the photo data from the Pexels API.
+    /// Fetches the photo data from the Pexels API using the provided client.
     pub async fn fetch(&self, client: &Pexels) -> Result<Photo, PexelsError> {
         let url = self.create_uri()?;
         let response = client.make_request(url.as_str()).await?;
@@ -70,10 +68,7 @@ mod tests {
     #[test]
     fn test_id() {
         let uri = FetchPhotoBuilder::new().id(123).build();
-        assert_eq!(
-            "https://api.pexels.com/v1/photos/123",
-            uri.create_uri().unwrap()
-        );
+        assert_eq!("https://api.pexels.com/v1/photos/123", uri.create_uri().unwrap());
     }
 
     #[tokio::test]
@@ -82,7 +77,7 @@ mod tests {
         let api_key = env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
         let client = Pexels::new(api_key);
 
-        let get_photo = FetchPhoto::builder().id(123).build();
+        let get_photo = FetchPhoto::builder().id(10967).build();
         let result = get_photo.fetch(&client).await;
         println!("get_photo result: {:?}", result);
         assert!(result.is_ok());
