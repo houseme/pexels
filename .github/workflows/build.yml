@@ -100,6 +100,8 @@ jobs:
       - name: Install rust
         uses: dtolnay/rust-toolchain@stable
       - name: Run cargo publish
-        run: cargo publish --registry crates-io --package sensitive-rs --allow-dirty
+        run: |
+          cargo publish --registry crates-io --allow-dirty -p pexels-api
+          cargo publish --registry crates-io --allow-dirty -p pexels-cli
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}

@@ -10,7 +10,7 @@ homepage.workspace = true
 repository.workspace = true
 documentation = "https://docs.rs/pexels-cli"
 keywords.workspace = true
-categories.workspace = true
+categories = ["command-line-utilities", "development-tools", "asynchronous", "network-programming"]
 
 [dependencies]
 pexels-api.workspace = true
