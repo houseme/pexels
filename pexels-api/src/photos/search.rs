@@ -4,6 +4,7 @@ use crate::{
 use url::Url;
 const PEXELS_PHOTO_SEARCH_PATH: &str = "search";
 
+/// Represents a hexadecimal color code.
 /// Used as an input value for [`Color::Hex`] when specifying a hexadecimal color code.
 ///
 /// #Example
@@ -23,7 +24,7 @@ const PEXELS_PHOTO_SEARCH_PATH: &str = "search";
 /// ```
 ///
 /// # Errors
-/// If string literal can't be validated as a valid hexadecimal color code [`PexelsError::HexColorCodeError`] will be propagated.
+/// Returns [`PexelsError::HexColorCodeError`] if the string is not a valid hexadecimal color code.
 #[derive(Debug, PartialEq)]
 pub struct Hex<'a>(&'a str);
 
@@ -51,7 +52,7 @@ impl<'a> Hex<'a> {
     }
 }
 
-/// Desired photo color.
+/// Represents the desired photo color.
 pub enum Color<'a> {
     Red,
     Orange,
@@ -69,7 +70,7 @@ pub enum Color<'a> {
 }
 
 impl Color<'_> {
-    /// Get enum as string literal value
+    /// Returns the string representation of the color.
     fn as_str(&self) -> Result<&str, PexelsError> {
         let value = match self {
             Color::Red => "red",
@@ -91,7 +92,7 @@ impl Color<'_> {
     }
 }
 
-/// This endpoint enables you to search Pexels for any topic that you would like. For example, your query could be something broad like Nature, Tigers, People. Or it could be something specific like a Group of people working.
+/// Represents a search query to the Pexels API.
 pub struct Search<'a> {
     query: &'a str,
     page: Option<usize>,
@@ -103,12 +104,12 @@ pub struct Search<'a> {
 }
 
 impl<'a> Search<'a> {
-    /// Creates [`SearchBuilder`] for building URI's.
+    /// Creates a new [`SearchBuilder`] for building URI's.
     pub fn builder() -> SearchBuilder<'a> {
         SearchBuilder::default()
     }
 
-    /// Create URI from inputted vales from the [`SearchBuilder`].
+    /// Creates a URI from the search parameters. [`SearchBuilder`].
     pub fn create_uri(&self) -> crate::BuilderResult {
         let uri = format!("{}/{}/{}", PEXELS_API, PEXELS_VERSION, PEXELS_PHOTO_SEARCH_PATH);
 
@@ -177,49 +178,49 @@ impl<'a> SearchBuilder<'a> {
         }
     }
 
-    /// The search query.
+    /// Sets the search query.
     pub fn query(mut self, query: &'a str) -> Self {
         self.query = query;
         self
     }
 
-    /// The page number you are requesting.
+    /// Sets the page number for the request.
     pub fn page(mut self, page: usize) -> Self {
         self.page = Some(page);
         self
     }
 
-    /// Desired photo orientation.
+    /// Sets the number of results per page for the request.
     pub fn per_page(mut self, per_page: usize) -> Self {
         self.per_page = Some(per_page);
         self
     }
 
-    /// Desired photo orientation.
+    /// Sets the desired photo orientation.
     pub fn orientation(mut self, orientation: Orientation) -> Self {
         self.orientation = Some(orientation);
         self
     }
 
-    /// Minimum photo size.
+    /// Sets the minimum photo size.
     pub fn size(mut self, size: Size) -> Self {
         self.size = Some(size);
         self
     }
 
-    /// Desired photo color.
+    /// Sets the desired photo color.
     pub fn color(mut self, color: Color<'a>) -> Self {
         self.color = Some(color);
         self
     }
 
-    /// The locale of the search you are performing.
+    /// Sets the locale of the search.
     pub fn locale(mut self, locale: Locale) -> Self {
         self.locale = Some(locale);
         self
     }
 
-    /// Create [`Search`] from the [`SearchBuilder`]
+    /// Builds a `Search` instance from the `SearchBuilder`
     pub fn build(self) -> Search<'a> {
         Search {
             query: self.query,

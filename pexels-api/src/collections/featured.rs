@@ -13,7 +13,7 @@ pub struct Featured {
 }
 
 impl Featured {
-    /// Creates  a new [`FeaturedBuilder`] for constructing a `Featured` request.
+    /// Creates a new `FeaturedBuilder` for constructing a `Featured` request.
     pub fn builder() -> FeaturedBuilder {
         FeaturedBuilder::default()
     }
@@ -47,7 +47,7 @@ impl Featured {
     }
 }
 
-/// Builder for constructing a [`Featured`] request.
+/// Builder for constructing a `Featured` request.
 #[derive(Default)]
 pub struct FeaturedBuilder {
     page: Option<usize>,
@@ -72,7 +72,7 @@ impl FeaturedBuilder {
         self
     }
 
-    /// Create the [`Featured`] request from the [`FeaturedBuilder`] parameters.
+    /// Build the `Featured` request from the `FeaturedBuilder` parameters.
     pub fn build(self) -> Featured {
         Featured { page: self.page, per_page: self.per_page }
     }

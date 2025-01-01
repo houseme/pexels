@@ -1,19 +1,19 @@
 /*!
-The `pexels_api` crate provides API wrapper for Pexels. It based on [Pexels API Documentation](https://www.pexels.com/api/documentation/).
+The `pexels_api` crate provides an API wrapper for Pexels. It is based on the [Pexels API Documentation](https://www.pexels.com/api/documentation/).
 
-To get the API key, you have to request the access from [Request API Access – Pexels](https://www.pexels.com/api/new/).
+To get the API key, you have to request access from [Request API Access – Pexels](https://www.pexels.com/api/new/).
 
-This library depends on [serde-json](https://github.com/serde-rs/json) crate to handle the result, thus you have to read the documentation [serde_json - Rust](https://docs.serde.rs/serde_json/index.html), especially [serde_json::Value - Rust](https://docs.serde.rs/serde_json/enum.Value.html).
+This library depends on the [serde-json](https://github.com/serde-rs/json) crate to handle the result. Thus, you have to read the documentation [serde_json - Rust](https://docs.serde.rs/serde_json/index.html), especially [serde_json::Value - Rust](https://docs.serde.rs/serde_json/enum.Value.html).
 
 # Setup
 
-Add this line to your `Cargo.toml` file, below `[dependencies]`
+Add this line to your `Cargo.toml` file, below `[dependencies]`:
 
 ```toml
 pexels_api = "*"
 ```
 
-and this to your crate root file e.g. `main.rs`:
+and this to your crate root file, e.g., `main.rs`:
 
 ```rust
 use pexels_api;
@@ -28,7 +28,7 @@ This example shows how to get the list of *mountains* photos.
 ```rust
 use dotenv::dotenv;
 use std::env;
-use pexels_api::{Pexels,SearchBuilder};
+use pexels_api::{Pexels, SearchBuilder};
 
 #[tokio::main]
 async fn main() {
@@ -44,11 +44,11 @@ async fn main() {
 }
 ```
 
-and you can run it using `cargo run`! Simply as that.
+and you can run it using `cargo run`! It's as simple as that.
 
 # Random photo
 
-If you want to get a random photo, you can use the `curated_photo` function and set per_page to 1 and page to a random number between 1 and 1000 to get a beautiful random photo. You can do the same with popular searches if you want to get a random photo with a specific topic.
+If you want to get a random photo, you can use the `curated_photo` function and set `per_page` to 1 and `page` to a random number between 1 and 1000 to get a beautiful random photo. You can do the same with popular searches if you want to get a random photo with a specific topic.
 
 # Image formats
 
@@ -61,6 +61,7 @@ If you want to get a random photo, you can use the `curated_photo` function and 
 * landscape - This image has a width of 1200px and height of 627px.
 * tiny - This image has a width of 280px and height of 200px.
 */
+
 mod collections;
 mod domain;
 mod photos;
@@ -125,6 +126,17 @@ const PEXELS_COLLECTIONS_PATH: &str = "collections";
 const PEXELS_API: &str = "https://api.pexels.com";
 
 /// Desired photo orientation.
+/// Supported values: `landscape`, `portrait`, `square`.
+/// Default: `landscape`.
+///
+/// # Example
+/// ```rust
+/// use pexels_api::Orientation;
+/// use std::str::FromStr;
+///
+/// let orientation = Orientation::from_str("landscape").unwrap();
+/// assert_eq!(orientation, Orientation::Landscape);
+/// ```
 #[derive(PartialEq, Debug)]
 pub enum Orientation {
     Landscape,
@@ -155,8 +167,17 @@ impl FromStr for Orientation {
     }
 }
 
-/// The order of items in the media collection.
-/// Supported values are: asc, desc. Default: asc
+/// Specifies the order of items in the media collection.
+/// Supported values: `asc`, `desc`. Default: `asc`.
+///
+/// # Example
+/// ```rust
+/// use pexels_api::MediaSort;
+/// use std::str::FromStr;
+///
+/// let sort = MediaSort::from_str("asc").unwrap();
+/// assert_eq!(sort, MediaSort::Asc);
+/// ```
 #[derive(PartialEq, Debug)]
 pub enum MediaSort {
     Asc,
@@ -184,9 +205,21 @@ impl FromStr for MediaSort {
     }
 }
 
-/// The type of media you are requesting.
-/// If not given or if given with an invalid value, all media will be returned.
-/// Supported values are photos and videos.
+/// Specifies the type of media to request.
+/// If not provided or invalid, all media types will be returned.
+/// Supported values: `photos`, `videos`.
+///
+/// # Example
+/// ```rust
+/// use pexels_api::MediaType;
+/// use std::str::FromStr;
+///
+/// let media_type = MediaType::from_str("photos");
+/// match media_type {
+///     Ok(mt) => assert_eq!(mt, MediaType::Photo),
+///     Err(e) => eprintln!("Error parsing media type: {:?}", e),
+/// }
+/// ```
 #[derive(PartialEq, Debug)]
 pub enum MediaType {
     Photo,
@@ -217,8 +250,20 @@ impl FromStr for MediaType {
     }
 }
 
-/// The locale of the search you are performing.
+/// Specifies the locale for the search query.
+/// Supported values: `en-US`, `pt-BR`, `es-ES`, `ca-ES`, `de-DE`, `it-IT`, `fr-FR`, `sv-SE`, `id-ID`, `pl-PL`, `ja-JP`, `zh-TW`, `zh-CN`, `ko-KR`, `th-TH`, `nl-NL`, `hu-HU`, `vi-VN`, `cs-CZ`, `da-DK`, `fi-FI`, `uk-UA`, `el-GR`, `ro-RO`, `nb-NO`, `sk-SK`, `tr-TR`, `ru-RU`.
+/// Default: `en-US`.
+///
+/// # Example
+/// ```rust
+/// use pexels_api::Locale;
+/// use std::str::FromStr;
+///
+/// let locale = Locale::from_str("en-US").unwrap();
+/// assert_eq!(locale, Locale::en_US);
+/// ```
 #[allow(non_camel_case_types)]
+#[derive(PartialEq, Debug)]
 pub enum Locale {
     en_US,
     pt_BR,
@@ -285,7 +330,56 @@ impl Locale {
     }
 }
 
-/// Minimum videos/photo size.
+impl FromStr for Locale {
+    type Err = PexelsError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "en-us" => Ok(Locale::en_US),
+            "pt-br" => Ok(Locale::pt_BR),
+            "es-es" => Ok(Locale::es_ES),
+            "ca-es" => Ok(Locale::ca_ES),
+            "de-de" => Ok(Locale::de_DE),
+            "it-it" => Ok(Locale::it_IT),
+            "fr-fr" => Ok(Locale::fr_FR),
+            "sv-se" => Ok(Locale::sv_SE),
+            "id-id" => Ok(Locale::id_ID),
+            "pl-pl" => Ok(Locale::pl_PL),
+            "ja-jp" => Ok(Locale::ja_JP),
+            "zh-tw" => Ok(Locale::zh_TW),
+            "zh-cn" => Ok(Locale::zh_CN),
+            "ko-kr" => Ok(Locale::ko_KR),
+            "th-th" => Ok(Locale::th_TH),
+            "nl-nl" => Ok(Locale::nl_NL),
+            "hu-hu" => Ok(Locale::hu_HU),
+            "vi-vn" => Ok(Locale::vi_VN),
+            "cs-cz" => Ok(Locale::cs_CZ),
+            "da-dk" => Ok(Locale::da_DK),
+            "fi-fi" => Ok(Locale::fi_FI),
+            "uk-ua" => Ok(Locale::uk_UA),
+            "el-gr" => Ok(Locale::el_GR),
+            "ro-ro" => Ok(Locale::ro_RO),
+            "nb-no" => Ok(Locale::nb_NO),
+            "sk-sk" => Ok(Locale::sk_SK),
+            "tr-tr" => Ok(Locale::tr_TR),
+            "ru-ru" => Ok(Locale::ru_RU),
+            _ => Err(PexelsError::ParseLocaleError),
+        }
+    }
+}
+
+/// Specifies the minimum size for videos or photos.
+/// Supported values: `large`, `medium`, `small`.
+///
+/// # Example
+/// ```rust
+/// use pexels_api::Size;
+/// use std::str::FromStr;
+///
+/// let size = Size::from_str("large").unwrap();
+/// assert_eq!(size, Size::Large);
+/// ```
+#[derive(PartialEq, Debug)]
 pub enum Size {
     Large,
     Medium,
@@ -315,10 +409,20 @@ impl FromStr for Size {
     }
 }
 
-/// Builder result type
+/// Type alias for the result returned by builders.
 pub(crate) type BuilderResult = Result<String, PexelsError>;
 
 /// Errors that can occur while interacting with the Pexels API.
+/// This enum is used as the return type for functions that interact with the API.
+///
+/// # Example
+/// ```rust
+/// use pexels_api::PexelsError;
+/// use std::str::FromStr;
+///
+/// let error = PexelsError::ParseMediaTypeError;
+/// assert_eq!(error.to_string(), "Failed to parse media type: invalid value");
+/// ```
 #[derive(Debug, Error)]
 pub enum PexelsError {
     #[error("Failed to send HTTP request: {0}")]
@@ -341,6 +445,8 @@ pub enum PexelsError {
     ParseOrientationError,
     #[error("Failed to parse size: invalid value")]
     ParseSizeError,
+    #[error("Failed to parse locale: invalid value")]
+    ParseLocaleError,
 }
 
 // Manual implementation PartialEq
@@ -372,6 +478,40 @@ impl PartialEq for PexelsError {
 }
 
 /// Client for interacting with the Pexels API
+///
+/// # Example
+/// ```rust
+/// use dotenv::dotenv;
+/// use pexels_api::Pexels;
+/// use std::env;
+///
+/// #[tokio::main]
+/// async fn main() {
+///    dotenv().ok();
+///   let api_key = env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
+///  let client = Pexels::new(api_key);
+/// }
+/// ```
+///
+/// # Errors
+/// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
+///
+/// # Example
+/// ```rust
+/// use dotenv::dotenv;
+/// use pexels_api::Pexels;
+/// use pexels_api::SearchBuilder;
+/// use std::env;
+///
+/// #[tokio::main]
+/// async fn main() {
+///     dotenv().ok();
+///     let api_key = env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
+///     let client = Pexels::new(api_key);
+///     let response = client.search_photos(SearchBuilder::new().query("mountains").per_page(15).page(1)).await.expect("Failed to get photos");
+///     println!("{:?}", response);
+/// }
+/// ```
 pub struct Pexels {
     client: Client,
     api_key: String,
@@ -425,6 +565,20 @@ impl Pexels {
         FetchPhotoBuilder::new().id(id).build().fetch(self).await
     }
 
+    /// Retrieves a random photo from the Pexels API.
+    ///
+    /// # Arguments
+    /// * `builder` - A `CuratedBuilder` instance with the search parameters.
+    ///
+    /// # Errors
+    /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.  
+    pub async fn curated_photo(
+        &self,
+        builder: CuratedBuilder,
+    ) -> Result<PhotosResponse, PexelsError> {
+        builder.build().fetch(self).await
+    }
+
     /// Retrieves a list of videos from the Pexels API based on the search criteria.
     ///
     /// # Arguments
@@ -435,6 +589,21 @@ impl Pexels {
     pub async fn search_videos(
         &self,
         builder: VideoSearchBuilder<'_>,
+    ) -> Result<VideoResponse, PexelsError> {
+        builder.build().fetch(self).await
+    }
+
+    /// popular_videos
+    /// Retrieves a list of popular videos from the Pexels API.
+    ///
+    /// # Arguments
+    /// * `builder` - A `PopularBuilder` instance with the search parameters.
+    ///
+    /// # Errors
+    /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
+    pub async fn popular_videos(
+        &self,
+        builder: PopularBuilder,
     ) -> Result<VideoResponse, PexelsError> {
         builder.build().fetch(self).await
     }
@@ -464,6 +633,39 @@ impl Pexels {
         page: usize,
     ) -> Result<CollectionsResponse, PexelsError> {
         CollectionsBuilder::new().per_page(per_page).page(page).build().fetch(self).await
+    }
+
+    /// featured_collections
+    /// Retrieves a list of featured collections from the Pexels API.
+    ///
+    /// # Arguments
+    /// * `per_page` - The number of collections to retrieve per page.
+    /// * `page` - The page number to retrieve.
+    ///
+    /// # Errors
+    /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
+    ///
+    /// # Example
+    /// ```rust
+    /// use dotenv::dotenv;
+    /// use pexels_api::Pexels;
+    /// use std::env;
+    ///
+    /// #[tokio::main]
+    /// async fn main() {
+    ///     dotenv().ok();
+    ///     let api_key = env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
+    ///     let client = Pexels::new(api_key);
+    ///     let response = client.featured_collections(15, 1).await.expect("Failed to get collections");
+    ///     println!("{:?}", response);
+    /// }
+    /// ```
+    pub async fn featured_collections(
+        &self,
+        per_page: usize,
+        page: usize,
+    ) -> Result<CollectionsResponse, PexelsError> {
+        FeaturedBuilder::new().per_page(per_page).page(page).build().fetch(self).await
     }
 
     /// Retrieves all media (photos and videos) within a single collection.

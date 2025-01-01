@@ -6,9 +6,7 @@ use url::Url;
 /// The path for the search endpoint.
 const PEXELS_VIDEO_SEARCH_PATH: &str = "search";
 
-/// This endpoint allows you to search Pexels for any topic.
-/// For example, your query could be broad like \`Nature\`, \`Tigers\`, \`People\`,
-/// or specific like \`Group of people working\`.
+/// Represents a search request to the Pexels API for videos.
 pub struct Search<'a> {
     query: &'a str,
     page: Option<usize>,
@@ -24,7 +22,7 @@ impl<'a> Search<'a> {
         SearchBuilder::default()
     }
 
-    /// Create URI from inputted vales from the [`SearchBuilder`].
+    /// Creates a URI from the provided parameters.
     pub fn create_uri(&self) -> crate::BuilderResult {
         let uri = format!("{}/{}/{}", PEXELS_API, PEXELS_VIDEO_PATH, PEXELS_VIDEO_SEARCH_PATH);
 
@@ -81,43 +79,43 @@ impl<'a> SearchBuilder<'a> {
         Self { query: "", page: None, per_page: None, orientation: None, size: None, locale: None }
     }
 
-    /// The search query.
+    /// Sets the search query.
     pub fn query(mut self, query: &'a str) -> Self {
         self.query = query;
         self
     }
 
-    /// The page number you are requesting.
+    /// Sets the page number for the request.
     pub fn page(mut self, page: usize) -> Self {
         self.page = Some(page);
         self
     }
 
-    /// The number of results you are requesting per page.
+    /// Sets the number of results per page for the request.
     pub fn per_page(mut self, per_page: usize) -> Self {
         self.per_page = Some(per_page);
         self
     }
 
-    /// Desired video orientation.
+    /// Sets the desired video orientation.
     pub fn orientation(mut self, orientation: Orientation) -> Self {
         self.orientation = Some(orientation);
         self
     }
 
-    /// Minimum video size.
+    /// Sets the minimum video size.
     pub fn size(mut self, size: Size) -> Self {
         self.size = Some(size);
         self
     }
 
-    /// The locale of the search you are performing.
+    /// Sets the locale of the search.
     pub fn locale(mut self, locale: Locale) -> Self {
         self.locale = Some(locale);
         self
     }
 
-    /// Create [`Search`] from the [`SearchBuilder`]
+    /// Builds a `Search` instance from the `SearchBuilder`.
     pub fn build(self) -> Search<'a> {
         Search {
             query: self.query,

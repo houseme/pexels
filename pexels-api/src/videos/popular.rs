@@ -4,7 +4,7 @@ use url::Url;
 /// Path to get popular videos.
 const PEXELS_POPULAR_PATH: &str = "popular";
 
-/// Fetches the current popular Pexels videos.
+/// Represents a request for popular videos from the Pexels API.
 pub struct Popular {
     min_width: Option<usize>,
     min_height: Option<usize>,
@@ -15,12 +15,12 @@ pub struct Popular {
 }
 
 impl Popular {
-    /// Creates [`PopularBuilder`] for building URI's.
+    /// Creates a new [`PopularBuilder`] for building URI's.
     pub fn builder() -> PopularBuilder {
         PopularBuilder::default()
     }
 
-    /// Create URI from inputted vales from the [`PopularBuilder`].
+    /// Creates a URI from the provided parameters.
     pub fn create_uri(&self) -> crate::BuilderResult {
         let uri = format!("{}/{}/{}", PEXELS_API, PEXELS_VIDEO_PATH, PEXELS_POPULAR_PATH);
 
@@ -76,53 +76,46 @@ pub struct PopularBuilder {
 impl PopularBuilder {
     /// Creates a new [`PopularBuilder`].
     pub fn new() -> Self {
-        Self {
-            min_width: None,
-            min_height: None,
-            min_duration: None,
-            max_duration: None,
-            page: None,
-            per_page: None,
-        }
+        Self::default()
     }
 
-    /// The minimum width in pixels of the returned videos.
+    /// Sets the minimum width in pixels of the returned videos.
     pub fn min_width(mut self, min_width: usize) -> Self {
         self.min_width = Some(min_width);
         self
     }
 
-    /// The minimum height in pixels of the returned videos.
+    /// Sets the minimum height in pixels of the returned videos.
     pub fn min_height(mut self, min_height: usize) -> Self {
         self.min_height = Some(min_height);
         self
     }
 
-    /// The minimum duration in seconds of the returned videos.
+    /// Sets the minimum duration in seconds of the returned videos.
     pub fn min_duration(mut self, min_duration: usize) -> Self {
         self.min_duration = Some(min_duration);
         self
     }
 
-    /// The maximum duration in seconds of the returned videos.
+    /// Sets the maximum duration in seconds of the returned videos.
     pub fn max_duration(mut self, max_duration: usize) -> Self {
         self.max_duration = Some(max_duration);
         self
     }
 
-    /// The page number you are requesting.
+    /// Sets the page number for the request.
     pub fn page(mut self, page: usize) -> Self {
         self.page = Some(page);
         self
     }
 
-    /// The number of results you are requesting per page.
+    /// Sets the number of results per page for the request.
     pub fn per_page(mut self, per_page: usize) -> Self {
         self.per_page = Some(per_page);
         self
     }
 
-    /// Create [`Popular`] from the [`PopularBuilder`]
+    /// Builds a `Popular` instance from the `PopularBuilder`.
     pub fn build(self) -> Popular {
         Popular {
             page: self.page,

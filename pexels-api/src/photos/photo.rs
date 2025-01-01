@@ -46,7 +46,7 @@ impl FetchPhotoBuilder {
         Self { id: 0 }
     }
 
-    /// The id of the photo you are requesting.
+    /// Sets the ID of the photo to be requested.
     pub fn id(mut self, id: usize) -> Self {
         self.id = id;
         self

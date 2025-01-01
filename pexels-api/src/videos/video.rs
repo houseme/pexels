@@ -3,18 +3,18 @@ use url::Url;
 /// Path to get a specific video.
 const PEXELS_GET_VIDEO_PATH: &str = "videos";
 
-/// Retrieve a specific video from its ID.
+/// Represents a request to fetch a specific video by its ID from the Pexels API.
 pub struct FetchVideo {
     id: usize,
 }
 
 impl FetchVideo {
-    /// Creates [`FetchVideoBuilder`] for building URI's.
+    /// Creates a new `FetchVideoBuilder` for building URIs.
     pub fn builder() -> FetchVideoBuilder {
         FetchVideoBuilder::default()
     }
 
-    /// Create URI from inputed vales from the [`FetchVideoBuilder`].
+    /// Creates a URI from the provided values.
     pub fn create_uri(&self) -> crate::BuilderResult {
         let uri =
             format!("{}/{}/{}/{}", PEXELS_API, PEXELS_VIDEO_PATH, PEXELS_GET_VIDEO_PATH, self.id);
@@ -24,7 +24,7 @@ impl FetchVideo {
         Ok(url.into())
     }
 
-    /// Fetch the video data from the Pexels API.
+    /// Fetches the video data from the Pexels API.
     pub async fn fetch(&self, client: &Pexels) -> Result<Video, PexelsError> {
         let url = self.create_uri()?;
         let response = client.make_request(url.as_str()).await?;
@@ -33,25 +33,25 @@ impl FetchVideo {
     }
 }
 
-/// Builder for [`FetchVideo`].
+/// Builder for `FetchVideo`.
 #[derive(Default)]
 pub struct FetchVideoBuilder {
     id: usize,
 }
 
 impl FetchVideoBuilder {
-    /// Create a new [`FetchVideoBuilder`].
+    /// Creates a new `FetchVideoBuilder`.
     pub fn new() -> Self {
         Self { id: 0 }
     }
 
-    /// The id of the video you are requesting.
+    /// Sets the ID of the video to be fetched.
     pub fn id(mut self, id: usize) -> Self {
         self.id = id;
         self
     }
 
-    /// Create [`FetchVideo`] from the [`FetchVideoBuilder`]
+    /// Builds a `FetchVideo` instance from the `FetchVideoBuilder`.
     pub fn build(self) -> FetchVideo {
         FetchVideo { id: self.id }
     }

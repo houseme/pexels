@@ -10,7 +10,7 @@ pub struct Collections {
 }
 
 impl Collections {
-    /// Creates a new [`CollectionsBuilder`] for constructing a `Collections` request.
+    /// Creates a new `CollectionsBuilder` for constructing a `Collections` request.
     pub fn builder() -> CollectionsBuilder {
         CollectionsBuilder::default()
     }
@@ -41,7 +41,7 @@ impl Collections {
     }
 }
 
-/// Builder for constructing a [`Collections`] request.
+/// Builder for constructing a `Collections` request.
 #[derive(Default)]
 pub struct CollectionsBuilder {
     page: Option<usize>,
@@ -49,24 +49,24 @@ pub struct CollectionsBuilder {
 }
 
 impl CollectionsBuilder {
-    /// Creates a new [`CollectionsBuilder`].
+    /// Creates a new `CollectionsBuilder`.
     pub fn new() -> Self {
         Self { page: None, per_page: None }
     }
 
-    /// Sets the page number for the collections request.
+    /// Sets the page number for the collection request.
     pub fn page(mut self, page: usize) -> Self {
         self.page = Some(page);
         self
     }
 
-    /// Sets the number of results per page for the collections request.
+    /// Sets the number of results per page for the collection request.
     pub fn per_page(mut self, per_page: usize) -> Self {
         self.per_page = Some(per_page);
         self
     }
 
-    /// Builds the [`Collections`] request from the [`CollectionsBuilder`] parameters
+    /// Builds the `Collections` request from the `CollectionsBuilder` parameters
     pub fn build(self) -> Collections {
         Collections { page: self.page, per_page: self.per_page }
     }

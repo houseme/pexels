@@ -33,7 +33,7 @@ impl Curated {
         Ok(url.into())
     }
 
-    /// Fetch the photo data from the Pexels API `Curated`.
+    /// Fetches the photo data from the Pexels API `Curated` endpoint.
     pub async fn fetch(&self, client: &Pexels) -> Result<PhotosResponse, PexelsError> {
         let url = self.create_uri()?;
         let response = client.make_request(url.as_str()).await?;
@@ -55,13 +55,13 @@ impl CuratedBuilder {
         Self { page: None, per_page: None }
     }
 
-    /// The page number you are requesting.
+    /// Sets the page number for the request.
     pub fn page(mut self, page: usize) -> Self {
         self.page = Some(page);
         self
     }
 
-    /// The number of results you are requesting per page.
+    /// Sets the number of results per page for the request.
     pub fn per_page(mut self, per_page: usize) -> Self {
         self.per_page = Some(per_page);
         self
