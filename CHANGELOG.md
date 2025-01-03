@@ -4,8 +4,6 @@
 
 ## [0.0.3] - 2025-01-03
 
-### Changelog
-
 ### Changed
 
 - Replaced `dotenv` crate with `dotenvy` for environment variable management.
