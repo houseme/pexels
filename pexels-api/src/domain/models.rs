@@ -117,22 +117,6 @@ pub struct PhotosResponse {
     pub prev_page: Option<String>,
 }
 
-/// Represents a Pexels video.
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct Video {
-    pub id: u32,
-    pub width: u32,
-    pub height: u32,
-    pub url: String,
-    pub image: String,
-    pub full_res: Option<String>,
-    pub tags: Vec<String>,
-    pub duration: u32,
-    pub user: User,
-    pub video_files: Vec<VideoFile>,
-    pub video_pictures: Vec<VideoPicture>,
-}
-
 /// Represents the response for a list of videos.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct VideoResponse {
@@ -145,30 +129,56 @@ pub struct VideoResponse {
     pub next_page: Option<String>,
 }
 
+/// Represents a Pexels video.
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Video {
+    #[serde(default)]
+    pub avg_color: Option<String>,
+    pub duration: u32,
+    #[serde(default)]
+    pub full_res: Option<String>,
+    pub height: u32,
+    pub id: u32,
+    #[serde(rename = "image")]
+    pub image_url: String,
+    pub tags: Vec<String>,
+    #[serde(rename = "url")]
+    pub video_url: String,
+    pub user: User,
+    pub video_files: Vec<VideoFile>,
+    pub video_pictures: Vec<VideoPicture>,
+    pub width: u32,
+}
+
 /// Represents a user who created a media item.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct User {
     pub id: u32,
     pub name: String,
-    pub url: String,
+    #[serde(rename = "url")]
+    pub user_url: String,
 }
 
 /// Represents a video file with different qualities.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct VideoFile {
-    pub id: u32,
-    pub quality: String,
     pub file_type: String,
-    pub width: u32,
+    pub fps: f64,
     pub height: u32,
-    pub fps: f32, // Note that this should be of type f32 because fps is a decimal
-    pub link: String,
+    pub id: u32,
+    #[serde(rename = "link")]
+    pub file_link: String,
+    #[serde(default)]
+    pub quality: Option<String>,
+    pub size: u64,
+    pub width: u32,
 }
 
 /// Represents a preview picture of a video.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct VideoPicture {
     pub id: u32,
-    pub picture: String,
     pub nr: u32,
+    #[serde(rename = "picture")]
+    pub picture_url: String,
 }

@@ -30,7 +30,8 @@ Add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-pexels-api = { version = "0.0.1" }
+dotenvy = "0.15.7"
+pexels-api = { version = "0.0.3" }
 reqwest = { version = "0.12.11", features = ["json"] }
 serde = { version = "1.0.217", features = ["derive"] }
 serde_json = "1.0.134"
@@ -69,7 +70,7 @@ PEXELS_API_KEY=your_api_key_here
 Here is a basic example of how to use the `pexels-api` library:
 
 ```rust
-use dotenv::dotenv;
+use dotenvy::dotenv;
 use pexels_api::{Pexels, MediaType, MediaSort};
 use std::env;
 

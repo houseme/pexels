@@ -22,7 +22,8 @@ Add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-pexels-api = { version = "0.0.1" }
+dotenvy = "0.15.7"
+pexels-api = { version = "0.0.3" }
 reqwest = { version = "0.12.11", features = ["json"] }
 serde = { version = "1.0.217", features = ["derive"] }
 serde_json = "1.0.134"
@@ -50,37 +51,45 @@ use std::env;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    /// Load the environment variables from the .env file
     dotenv().ok();
+
+    /// Get the Pexels API key from the environment
     let api_key = env::var("PEXELS_API_KEY")?;
+
+    /// Create a new Pexels client
     let client = Pexels::new(api_key);
 
-    // Search for photos
+    /// Search for photos
     let photos = client.search_photos("nature", 10, 1).await?;
     for photo in photos.photos {
         println!("{:?}", photo);
     }
 
-    // Get a photo by ID
+    /// Get a photo by ID
     let photo = client.get_photo(10967).await?;
     println!("{:?}", photo);
 
-    // Search for videos
+    /// Search for videos
     let videos = client.search_videos("nature", 10, 1).await?;
     for video in videos.videos {
         println!("{:?}", video);
     }
 
-    // Get a video by ID
-    let video = client.get_video(3401900).await?;
+    /// Get a video by ID
+    /// Note: The video ID is just an example. You should replace it with a valid video ID.
+    /// You can get a video ID by searching for videos or collections.
+    /// # Example video ID: 25460961   
+    let video = client.get_video(25460961).await?;
     println!("{:?}", video);
 
-    // Search for collections
+    /// Search for collections
     let collections = client.search_collections(10, 1).await?;
     for collection in collections.collections {
         println!("{:?}", collection);
     }
 
-    // Search for media
+    /// Search for media
     let media_response = client.search_media("nature", 10, 1, MediaType::Photo, MediaSort::Latest).await?;
     for media in media_response.media {
         println!("{:?}", media);

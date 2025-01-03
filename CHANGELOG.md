@@ -4,11 +4,15 @@
 
 ## [0.0.3] - 2025-01-03
 
+### Changelog
+
 ### Changed
 
 - Replaced `dotenv` crate with `dotenvy` for environment variable management.
 - Optimized `Cargo.toml` for `pexels-cli`.
 - Added comments to `main.rs` in `pexels-cli`.
+- Updated comments and example code in `lib.rs`.
+- Improved content in `README.md`.
 
 ### Fixed
 

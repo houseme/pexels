@@ -10,7 +10,7 @@ This library depends on the [serde-json](https://github.com/serde-rs/json) crate
 Add this line to your `Cargo.toml` file, below `[dependencies]`:
 
 ```toml
-pexels_api = "*"
+pexels_api = "0.0.3"
 ```
 
 and this to your crate root file, e.g., `main.rs`:
@@ -595,6 +595,22 @@ impl Pexels {
     ///
     /// # Errors
     /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
+    ///
+    /// # Example
+    /// ```rust
+    /// use dotenvy::dotenv;
+    /// use pexels_api::Pexels;
+    /// use std::env;
+    ///
+    /// #[tokio::main]
+    /// async fn main() {
+    ///     dotenv().ok();
+    ///     let api_key = env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
+    ///     let client = Pexels::new(api_key);
+    ///     let response = client.get_photo(10967).await.expect("Failed to get photo");
+    ///     println!("{:?}", response);
+    /// }
+    /// ```                
     pub async fn get_photo(&self, id: usize) -> Result<Photo, PexelsError> {
         FetchPhotoBuilder::new().id(id).build().fetch(self).await
     }
@@ -711,7 +727,7 @@ impl Pexels {
     ///     dotenv().ok();
     ///     let api_key = env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
     ///     let client = Pexels::new(api_key);
-    ///     let response = client.get_video(12345).await.expect("Failed to get video");
+    ///     let response = client.get_video(25460961).await.expect("Failed to get video");
     ///     println!("{:?}", response);
     /// }
     /// ```
@@ -803,7 +819,7 @@ impl Pexels {
     ///     dotenv().ok();
     ///     let api_key = env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
     ///     let client = Pexels::new(api_key);
-    ///     let builder = MediaBuilder::new().id("12345".to_string()).per_page(15).page(1);
+    ///     let builder = MediaBuilder::new().id("tszhfva".to_string()).per_page(15).page(1);
     ///     let response = client.search_media(builder).await.expect("Failed to get media");
     ///     println!("{:?}", response);
     /// }                 

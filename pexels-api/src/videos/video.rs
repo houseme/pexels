@@ -27,7 +27,9 @@ impl FetchVideo {
     /// Fetches the video data from the Pexels API.
     pub async fn fetch(&self, client: &Pexels) -> Result<Video, PexelsError> {
         let url = self.create_uri()?;
+        println!("URL: {}", url);
         let response = client.make_request(url.as_str()).await?;
+        println!("Response: {}", response.clone());
         let video: Video = serde_json::from_value(response)?;
         Ok(video)
     }
