@@ -26,7 +26,7 @@ Done! Now you can use this API wrapper.
 This example shows how to get the list of *mountains* photos.
 
 ```rust
-use dotenv::dotenv;
+use dotenvy::dotenv;
 use std::env;
 use pexels_api::{Pexels, SearchBuilder};
 
@@ -53,13 +53,13 @@ If you want to get a random photo, you can use the `curated_photo` function and 
 # Image formats
 
 * original - The size of the original image is given with the attribute width and height.
-* large - This image has a maximum width of 940px and a maximum height of 650px. It has the aspect ratio of the original image.
-* large2x - This image has a maximum width of 1880px and a maximum height of 1300px. It has the aspect ratio of the original image.
-* medium - This image has a height of 350px and a flexible width. It has the aspect ratio of the original image.
-* small - This image has a height of 130px and a flexible width. It has the aspect ratio of the original image.
-* portrait - This image has a width of 800px and a height of 1200px.
-* landscape - This image has a width of 1200px and height of 627px.
-* tiny - This image has a width of 280px and height of 200px.
+* large - This image has a maximum width of 940 px and a maximum height of 650 px. It has the aspect ratio of the original image.
+* large2x - This image has a maximum width of 1880 px and a maximum height of 1300 px. It has the aspect ratio of the original image.
+* medium - This image has a height of 350 px and a flexible width. It has the aspect ratio of the original image.
+* small - This image has a height of 130 px and a flexible width. It has the aspect ratio of the original image.
+* portrait - This image has a width of 800 px and a height of 1200 px.
+* landscape - This image has a width of 1200 px and height of 627 px.
+* tiny - This image has a width of 280 px and height of 200 px.
 */
 
 mod collections;
@@ -481,7 +481,7 @@ impl PartialEq for PexelsError {
 ///
 /// # Example
 /// ```rust
-/// use dotenv::dotenv;
+/// use dotenvy::dotenv;
 /// use pexels_api::Pexels;
 /// use std::env;
 ///
@@ -498,7 +498,7 @@ impl PartialEq for PexelsError {
 ///
 /// # Example
 /// ```rust
-/// use dotenv::dotenv;
+/// use dotenvy::dotenv;
 /// use pexels_api::Pexels;
 /// use pexels_api::SearchBuilder;
 /// use std::env;
@@ -519,12 +519,29 @@ pub struct Pexels {
 
 impl Pexels {
     /// Create a new Pexels client.
+    ///
+    /// # Arguments
+    /// * `api_key` - The API key for the Pexels API.
+    ///
+    /// # Example
+    /// ```rust
+    /// use dotenvy::dotenv;
+    /// use pexels_api::Pexels;
+    /// use std::env;
+    ///
+    /// #[tokio::main]
+    /// async fn main() {
+    ///     dotenv().ok();
+    ///     let api_key = env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
+    ///     let client = Pexels::new(api_key);
+    /// }
+    /// ```         
     pub fn new(api_key: String) -> Self {
         Pexels { client: Client::new(), api_key }
     }
 
     /// Sends an HTTP GET request to the specified URL and returns the JSON response.
-    /// Utilizes the `reqwest` crate for making HTTP requests.
+    /// Uses the `reqwest` crate for making HTTP requests.
     ///
     /// # Errors
     /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
@@ -547,6 +564,23 @@ impl Pexels {
     ///
     /// # Errors
     /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
+    ///
+    /// # Example
+    /// ```rust
+    /// use dotenvy::dotenv;
+    /// use pexels_api::Pexels;
+    /// use pexels_api::SearchBuilder;
+    /// use std::env;
+    ///
+    /// #[tokio::main]
+    /// async fn main() {
+    ///     dotenv().ok();
+    ///     let api_key = env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
+    ///     let client = Pexels::new(api_key);
+    ///     let response = client.search_photos(SearchBuilder::new().query("mountains").per_page(15).page(1)).await.expect("Failed to get photos");
+    ///     println!("{:?}", response);
+    /// }
+    /// ```                 
     pub async fn search_photos(
         &self,
         builder: SearchBuilder<'_>,
@@ -572,6 +606,23 @@ impl Pexels {
     ///
     /// # Errors
     /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.  
+    ///
+    /// # Example
+    /// ```rust
+    /// use dotenvy::dotenv;
+    /// use pexels_api::Pexels;
+    /// use pexels_api::CuratedBuilder;
+    /// use std::env;
+    ///
+    /// #[tokio::main]
+    /// async fn main() {
+    ///     dotenv().ok();
+    ///     let api_key = env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
+    ///     let client = Pexels::new(api_key);
+    ///     let response = client.curated_photo(CuratedBuilder::new().per_page(1).page(1)).await.expect("Failed to get random photo");
+    ///     println!("{:?}", response);
+    /// }
+    /// ```                 
     pub async fn curated_photo(
         &self,
         builder: CuratedBuilder,
@@ -586,6 +637,23 @@ impl Pexels {
     ///
     /// # Errors
     /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
+    ///
+    /// # Example
+    /// ```rust
+    /// use dotenvy::dotenv;
+    /// use pexels_api::Pexels;
+    /// use pexels_api::VideoSearchBuilder;
+    /// use std::env;
+    ///
+    /// #[tokio::main]
+    /// async fn main() {
+    ///     dotenv().ok();
+    ///     let api_key = env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
+    ///     let client = Pexels::new(api_key);
+    ///     let response = client.search_videos(VideoSearchBuilder::new().query("nature").per_page(15).page(1)).await.expect("Failed to get videos");
+    ///     println!("{:?}", response);
+    /// }
+    /// ```                 
     pub async fn search_videos(
         &self,
         builder: VideoSearchBuilder<'_>,
@@ -593,7 +661,6 @@ impl Pexels {
         builder.build().fetch(self).await
     }
 
-    /// popular_videos
     /// Retrieves a list of popular videos from the Pexels API.
     ///
     /// # Arguments
@@ -601,6 +668,23 @@ impl Pexels {
     ///
     /// # Errors
     /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
+    ///
+    /// # Example
+    /// ```rust
+    /// use dotenvy::dotenv;
+    /// use pexels_api::Pexels;
+    /// use pexels_api::PopularBuilder;
+    /// use std::env;
+    ///
+    /// #[tokio::main]
+    /// async fn main() {
+    ///     dotenv().ok();
+    ///     let api_key = env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
+    ///     let client = Pexels::new(api_key);
+    ///     let response = client.popular_videos(PopularBuilder::new().per_page(15).page(1)).await.expect("Failed to get popular videos");
+    ///     println!("{:?}", response);
+    /// }
+    /// ```                
     pub async fn popular_videos(
         &self,
         builder: PopularBuilder,
@@ -615,6 +699,22 @@ impl Pexels {
     ///
     /// # Errors
     /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
+    ///
+    /// # Example
+    /// ```rust
+    /// use dotenvy::dotenv;
+    /// use pexels_api::Pexels;
+    /// use std::env;
+    ///
+    /// #[tokio::main]
+    /// async fn main() {
+    ///     dotenv().ok();
+    ///     let api_key = env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
+    ///     let client = Pexels::new(api_key);
+    ///     let response = client.get_video(12345).await.expect("Failed to get video");
+    ///     println!("{:?}", response);
+    /// }
+    /// ```
     pub async fn get_video(&self, id: usize) -> Result<Video, PexelsError> {
         FetchVideoBuilder::new().id(id).build().fetch(self).await
     }
@@ -627,6 +727,22 @@ impl Pexels {
     ///
     /// # Errors
     /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
+    ///
+    /// # Example
+    /// ```rust
+    /// use dotenvy::dotenv;
+    /// use pexels_api::Pexels;
+    /// use std::env;
+    ///
+    /// #[tokio::main]
+    /// async fn main() {
+    ///     dotenv().ok();
+    ///     let api_key = env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
+    ///     let client = Pexels::new(api_key);
+    ///     let response = client.search_collections(15, 1).await.expect("Failed to get collections");
+    ///     println!("{:?}", response);
+    /// }      
+    /// ```          
     pub async fn search_collections(
         &self,
         per_page: usize,
@@ -635,7 +751,6 @@ impl Pexels {
         CollectionsBuilder::new().per_page(per_page).page(page).build().fetch(self).await
     }
 
-    /// featured_collections
     /// Retrieves a list of featured collections from the Pexels API.
     ///
     /// # Arguments
@@ -647,7 +762,7 @@ impl Pexels {
     ///
     /// # Example
     /// ```rust
-    /// use dotenv::dotenv;
+    /// use dotenvy::dotenv;
     /// use pexels_api::Pexels;
     /// use std::env;
     ///
@@ -675,6 +790,23 @@ impl Pexels {
     ///
     /// # Errors
     /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
+    ///
+    /// # Example
+    /// ```rust
+    /// use dotenvy::dotenv;
+    /// use pexels_api::Pexels;
+    /// use pexels_api::MediaBuilder;
+    /// use std::env;
+    ///
+    /// #[tokio::main]
+    /// async fn main() {
+    ///     dotenv().ok();
+    ///     let api_key = env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
+    ///     let client = Pexels::new(api_key);
+    ///     let builder = MediaBuilder::new().id("12345".to_string()).per_page(15).page(1);
+    ///     let response = client.search_media(builder).await.expect("Failed to get media");
+    ///     println!("{:?}", response);
+    /// }                 
     pub async fn search_media(&self, builder: MediaBuilder) -> Result<MediaResponse, PexelsError> {
         builder.build().fetch(self).await
     }
@@ -683,7 +815,7 @@ impl Pexels {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use dotenv::dotenv;
+    use dotenvy::dotenv;
 
     #[test]
     fn test_pexels_error_partial_eq() {

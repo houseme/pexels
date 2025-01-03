@@ -61,7 +61,7 @@ impl FetchPhotoBuilder {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use dotenv::dotenv;
+    use dotenvy::dotenv;
     use std::env;
     use tokio;
 

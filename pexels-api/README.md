@@ -44,7 +44,7 @@ PEXELS_API_KEY=your_api_key_here
 Here is a basic example of how to use the library:
 
 ```rust
-use dotenv::dotenv;
+use dotenvy::dotenv;
 use pexels_api::{Pexels, MediaType, MediaSort};
 use std::env;
 

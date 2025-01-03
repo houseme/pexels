@@ -9,7 +9,7 @@ use crate::api::{
 };
 use crate::cli::Cli;
 use clap::Parser;
-use dotenv::dotenv;
+use dotenvy::dotenv;
 use pexels_api::{MediaSort, MediaType};
 
 #[tokio::main]

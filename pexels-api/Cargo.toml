@@ -22,7 +22,7 @@ url.workspace = true
 
 
 [dev-dependencies]
-dotenv.workspace = true
+dotenvy.workspace = true
 tokio.workspace = true
 
 [lib]

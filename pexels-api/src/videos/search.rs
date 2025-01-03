@@ -130,9 +130,8 @@ impl<'a> SearchBuilder<'a> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Locale, Orientation, Size};
-
     use crate::videos::search::SearchBuilder;
+    use crate::{Locale, Orientation, Size};
 
     #[test]
     fn test_query() {
