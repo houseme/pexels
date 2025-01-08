@@ -23,10 +23,10 @@ Add the following to your `Cargo.toml`:
 ```toml
 [dependencies]
 dotenvy = "0.15.7"
-pexels-api = { version = "0.0.3" }
+pexels-api = { version = "0.0.4" }
 reqwest = { version = "0.12.11", features = ["json"] }
 serde = { version = "1.0.217", features = ["derive"] }
-serde_json = "1.0.134"
+serde_json = "1.0.135"
 thiserror = "2.0.9 "
 tokio = { version = "1", features = ["full"] }
 url = "2.5.4"
