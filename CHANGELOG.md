@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+## [0.0.4] - 2025-01-08
+
+### Changed
+
+- Optimized the structure of `search_media`.
+- Improved test code.
+
+### Removed
+
+- Removed invalid `println` statements.
+
 ## [0.0.3] - 2025-01-03
 
 ### Changed

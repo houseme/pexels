@@ -38,14 +38,35 @@ pub struct MediaResponse {
 /// Enum representing the type of media.
 /// Supported values are `photos` and `videos`.
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "type")]
 pub enum MediaType {
     Photo(MediaPhoto),
     Video(MediaVideo),
 }
 
+// Manual implementation From<MediaType> to fill type_ field in MediaPhoto and MediaVideo
+impl From<MediaType> for MediaPhoto {
+    fn from(media: MediaType) -> Self {
+        match media {
+            MediaType::Photo(photo) => MediaPhoto { type_: "Photo".to_string(), ..photo },
+            _ => panic!("Expected Photo"),
+        }
+    }
+}
+
+impl From<MediaType> for MediaVideo {
+    fn from(media: MediaType) -> Self {
+        match media {
+            MediaType::Video(video) => MediaVideo { type_: "Video".to_string(), ..video },
+            _ => panic!("Expected Video"),
+        }
+    }
+}
+
 /// Represents a photo media object.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MediaPhoto {
+    #[serde(skip)]
     pub type_: String,
     pub id: u32,
     pub width: u32,
@@ -57,11 +78,13 @@ pub struct MediaPhoto {
     pub avg_color: String,
     pub src: PhotoSrc,
     pub liked: bool,
+    pub alt: String,
 }
 
 /// Represents a video media object.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MediaVideo {
+    #[serde(skip)]
     pub type_: String,
     pub id: u32,
     pub width: u32,

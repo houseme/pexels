@@ -10,7 +10,7 @@ resolver = "2"
 opt-level = 3
 
 [workspace.package]
-version = "0.0.3"
+version = "0.0.4"
 authors = ["https://github.com/houseme"]
 edition = "2021"
 rust-version = "1.80.0"
@@ -29,8 +29,8 @@ dotenvy = "0.15.7"
 pexels-api = { path = "./pexels-api", version = "0.0.3" }
 reqwest = { version = "0.12.12", features = ["json"] }
 serde = { version = "1.0.217", features = ["derive"] }
-serde_json = "1.0.134"
-thiserror = "2.0.9 "
+serde_json = "1.0.135"
+thiserror = "2.0.9"
 tokio = { version = "1", features = ["full"] }
 url = "2.5.4"
 

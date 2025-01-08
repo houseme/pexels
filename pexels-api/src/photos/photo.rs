@@ -82,16 +82,4 @@ mod tests {
         println!("get_photo result: {:?}", result);
         assert!(result.is_ok());
     }
-
-    #[test]
-    fn test_env() {
-        dotenv().ok();
-
-        let api_key = env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
-        println!("api_key: {}", api_key);
-
-        for (key, value) in env::vars() {
-            println!("{}=>: {}", key, value);
-        }
-    }
 }
