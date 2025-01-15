@@ -10,7 +10,7 @@ resolver = "2"
 opt-level = 3
 
 [workspace.package]
-version = "0.0.4"
+version = "0.0.5"
 authors = ["https://github.com/houseme"]
 edition = "2021"
 rust-version = "1.80.0"
