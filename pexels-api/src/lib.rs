@@ -10,7 +10,7 @@ This library depends on the [serde-json](https://github.com/serde-rs/json) crate
 Add this line to your `Cargo.toml` file, below `[dependencies]`:
 
 ```toml
-pexels_api = "0.0.3"
+pexels_api = "*"
 ```
 
 and this to your crate root file, e.g., `main.rs`:

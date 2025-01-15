@@ -6,7 +6,8 @@
 [![Crates.io License](https://img.shields.io/crates/l/pexels-api)](../LICENSE-APACHE)
 [![Crates.io](https://img.shields.io/crates/d/pexels-api)](https://crates.io/crates/pexels-api)
 
-Pexels API is a Rust library for interacting with the Pexels API. It allows you to search for photos, videos, and collections, as well as retrieve individual media items by their ID.
+Pexels API is a Rust library for interacting with the Pexels API. It allows you to search for photos, videos, and
+collections, as well as retrieve individual media items by their ID.
 
 ## Features
 
@@ -23,7 +24,7 @@ Add the following to your `Cargo.toml`:
 ```toml
 [dependencies]
 dotenvy = "0.15.7"
-pexels-api = { version = "0.0.4" }
+pexels-api = { version = "0.0.5" }
 reqwest = { version = "0.12.11", features = ["json"] }
 serde = { version = "1.0.217", features = ["derive"] }
 serde_json = "1.0.135"
@@ -108,12 +109,17 @@ The main client for interacting with the Pexels API.
 #### Methods
 
 - `new(api_key: String) -> Self`: Creates a new Pexels client.
-- `search_photos(query: &str, per_page: usize, page: usize) -> Result<PhotosResponse, PexelsError>`: Searches for photos.
+- `search_photos(query: &str, per_page: usize, page: usize) -> Result<PhotosResponse, PexelsError>`: Searches for
+  photos.
 - `get_photo(id: u32) -> Result<Photo, PexelsError>`: Retrieves a photo by its ID.
-- `search_videos(query: &str, per_page: usize, page: usize) -> Result<VideosResponse, PexelsError>`: Searches for videos.
+- `search_videos(query: &str, per_page: usize, page: usize) -> Result<VideosResponse, PexelsError>`: Searches for
+  videos.
 - `get_video(id: u32) -> Result<Video, PexelsError>`: Retrieves a video by its ID.
-- `search_collections(per_page: usize, page: usize) -> Result<CollectionsResponse, PexelsError>`: Searches for collections.
-- `search_media(query: &str, per_page: usize, page: usize, media_type: MediaType, sort: MediaSort) -> Result<MediaResponse, PexelsError>`: Searches for media.
+- `search_collections(per_page: usize, page: usize) -> Result<CollectionsResponse, PexelsError>`: Searches for
+  collections.
+-
+`search_media(query: &str, per_page: usize, page: usize, media_type: MediaType, sort: MediaSort) -> Result<MediaResponse, PexelsError>`:
+Searches for media.
 
 ## Documentation
 

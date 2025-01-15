@@ -6,7 +6,8 @@
 [![License](https://img.shields.io/crates/l/pexels-api)](../LICENSE-APACHE)
 [![Crates.io](https://img.shields.io/crates/d/pexels-api)](https://crates.io/crates/pexels-api)
 
-This project consists of two main components: `pexels-api` and `pexels-cli`. The `pexels-api` is a Rust library for interacting with the Pexels API, while the
+This project consists of two main components: `pexels-api` and `pexels-cli`. The `pexels-api` is a Rust library for
+interacting with the Pexels API, while the
 `pexels-cli` is a command-line interface for using the `pexels-api`.
 
 ## Features
@@ -31,7 +32,7 @@ Add the following to your `Cargo.toml`:
 ```toml
 [dependencies]
 dotenvy = "0.15.7"
-pexels-api = { version = "0.0.4" }
+pexels-api = { version = "0.0.5" }
 reqwest = { version = "0.12.11", features = ["json"] }
 serde = { version = "1.0.217", features = ["derive"] }
 serde_json = "1.0.135"
@@ -150,7 +151,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 ## Documentation
 
-For detailed documentation, please refer to [pexels-api Documentation](https://docs.rs/pexels-api) and [pexels-cli Documentation](https://docs.rs/pexels-cli).
+For detailed documentation, please refer to [pexels-api Documentation](https://docs.rs/pexels-api)
+and [pexels-cli Documentation](https://docs.rs/pexels-cli).
 
 ## License
 
@@ -163,4 +165,5 @@ at your option.
 
 ## Contribution
 
-Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 or MIT license, shall be dual licensed as above, without any additional terms or conditions.
+Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as
+defined in the Apache-2.0 or MIT license, shall be dual licensed as above, without any additional terms or conditions.
