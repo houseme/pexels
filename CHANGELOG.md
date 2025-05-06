@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Updated `workflows` Config file.
+
 ## [0.0.4] - 2025-01-08
 
 ### Changed

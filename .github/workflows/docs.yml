@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
         with:
           submodules: 'recursive'
 
@@ -20,7 +20,9 @@ jobs:
           sudo apt install -y cmake libclang-dev
 
       - name: Install stable toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
 
       - name: Run cargo doc
         run: cargo doc --no-deps --all-features
