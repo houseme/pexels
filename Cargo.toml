@@ -15,7 +15,7 @@ authors = ["https://github.com/houseme"]
 edition = "2021"
 rust-version = "1.80.0"
 license = "MIT OR Apache-2.0"
-description = "A Rust client for the Pexels API"
+description = "A Rust client for the Pexels API. API Address: https://www.pexels.com/api/documentation/"
 homepage = "https://github.com/houseme/pexels"
 repository = "https://github.com/houseme/pexels.git"
 documentation = "https://docs.rs/pexels"
@@ -26,11 +26,11 @@ categories = ["web-programming", "development-tools", "asynchronous", "network-p
 [workspace.dependencies]
 clap = { version = "4.5.37", features = ["derive"] }
 dotenvy = "0.15.7"
+futures = "0.3.31"
 pexels-api = { path = "./pexels-api", version = "0.0.5" }
-reqwest = { version = "0.12.15", default-features = false, features = ["json", "rustls-tls", "charset", "http2", "macos-system-configuration"] }
+reqwest = { version = "0.12.15", default-features = false, features = ["json", "rustls-tls", "charset", "http2", "macos-system-configuration", "stream"] }
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.140"
 thiserror = "2.0.12"
-tokio = { version = "1.44.2", features = ["full"] }
+tokio = { version = "1.45.0", features = ["full"] }
 url = "2.5.4"
-

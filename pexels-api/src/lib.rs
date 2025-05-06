@@ -62,9 +62,13 @@ If you want to get a random photo, you can use the `curated_photo` function and 
 * tiny - This image has a width of 280 px and height of 200 px.
 */
 
+mod client;
 mod collections;
 mod domain;
+mod download;
+mod models;
 mod photos;
+mod search;
 mod videos;
 
 /// collections module
@@ -103,12 +107,16 @@ pub use videos::search::SearchBuilder as VideoSearchBuilder;
 pub use videos::video::FetchVideo;
 pub use videos::video::FetchVideoBuilder;
 
+pub use client::PexelsClient;
+pub use search::SearchParams;
+
 /// import crate
 use reqwest::Client;
 use reqwest::Error as ReqwestError;
-use serde_json::Error as JsonError;
+use serde_json::Error as JSONError;
 use serde_json::Value;
 use std::env::VarError;
+use std::fmt::Display;
 use std::str::FromStr;
 use thiserror::Error;
 use url::ParseError;
@@ -137,7 +145,7 @@ const PEXELS_API: &str = "https://api.pexels.com";
 /// let orientation = Orientation::from_str("landscape").unwrap();
 /// assert_eq!(orientation, Orientation::Landscape);
 /// ```
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 pub enum Orientation {
     Landscape,
     Portrait,
@@ -164,6 +172,17 @@ impl FromStr for Orientation {
             "square" => Ok(Orientation::Square),
             _ => Err(PexelsError::ParseMediaSortError),
         }
+    }
+}
+
+impl Display for Orientation {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let str = match self {
+            Orientation::Landscape => "landscape".to_string(),
+            Orientation::Portrait => "portrait".to_string(),
+            Orientation::Square => "square".to_string(),
+        };
+        write!(f, "{}", str)
     }
 }
 
@@ -379,7 +398,7 @@ impl FromStr for Locale {
 /// let size = Size::from_str("large").unwrap();
 /// assert_eq!(size, Size::Large);
 /// ```
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 pub enum Size {
     Large,
     Medium,
@@ -409,6 +428,17 @@ impl FromStr for Size {
     }
 }
 
+impl Display for Size {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let str = match self {
+            Size::Large => "large".to_string(),
+            Size::Medium => "medium".to_string(),
+            Size::Small => "small".to_string(),
+        };
+        write!(f, "{}", str)
+    }
+}
+
 /// Type alias for the result returned by builders.
 pub(crate) type BuilderResult = Result<String, PexelsError>;
 
@@ -428,7 +458,7 @@ pub enum PexelsError {
     #[error("Failed to send HTTP request: {0}")]
     RequestError(#[from] ReqwestError),
     #[error("Failed to parse JSON response: {0}")]
-    JsonParseError(#[from] JsonError),
+    JsonParseError(#[from] JSONError),
     #[error("API key not found in environment variables: {0}")]
     EnvVarError(#[from] VarError),
     #[error("API key not found in environment variables")]
@@ -447,6 +477,24 @@ pub enum PexelsError {
     ParseSizeError,
     #[error("Failed to parse locale: invalid value")]
     ParseLocaleError,
+    #[error("Download error: {0}")]
+    DownloadError(String),
+    #[error("IO error: {0}")]
+    IoError(#[from] std::io::Error),
+    #[error("API error: {0}")]
+    ApiError(String),
+    #[error("Rate limit exceeded")]
+    RateLimitError,
+    #[error("Authentication error: {0}")]
+    AuthError(String),
+    #[error("Invalid parameter: {0}")]
+    InvalidParameter(String),
+    #[error("Resource not found: {0}")]
+    NotFound(String),
+    #[error("Asynchronous task error")]
+    AsyncError,
+    #[error("Unknown error: {0}")]
+    Unknown(String),
 }
 
 // Manual implementation PartialEq
