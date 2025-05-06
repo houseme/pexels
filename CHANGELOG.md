@@ -4,7 +4,11 @@
 
 ### Changed
 
-- Updated `workflows` Config file.
+- Updated `workflows` Config file
+
+### Add
+
+- Add `Roadmap.md` for project planning and feature tracking.
 
 ## [0.0.4] - 2025-01-08
 
