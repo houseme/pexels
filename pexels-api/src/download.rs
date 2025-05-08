@@ -12,7 +12,7 @@ use tokio::sync::Semaphore;
 use crate::models::{Photo, Video};
 use crate::PexelsError;
 
-/// 图片质量枚举
+/// Picture quality enumeration
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ImageQuality {
     Original,
@@ -134,7 +134,6 @@ impl DownloadManager {
             let photo = photo.clone();
             let dir = output_dir.clone();
             let client = self.client.clone();
-            let quality = quality;
             let callback = progress_callback;
 
             let handle = tokio::spawn(async move {
@@ -256,7 +255,6 @@ impl DownloadManager {
             let video = video.clone();
             let dir = output_dir.clone();
             let client = self.client.clone();
-            let quality = quality;
             let callback = progress_callback;
 
             let handle = tokio::spawn(async move {
@@ -267,7 +265,7 @@ impl DownloadManager {
                     .video_files
                     .iter()
                     .find(|file| match quality {
-                        VideoQuality::HD => file.quality == "hd" || file.quality == "hd",
+                        VideoQuality::HD => file.quality == "hd" || file.quality == "HD",
                         VideoQuality::SD => file.quality == "sd",
                         VideoQuality::Tiny => {
                             file.file_type == "video/mp4"
@@ -403,7 +401,7 @@ impl DownloadManager {
         }
 
         // Get the file size
-        let total_size = response.content_length().unwrap_or(0) + range_start;
+        let _total_size = response.content_length().unwrap_or(0) + range_start;
 
         let mut file = if range_start > 0 {
             fs::OpenOptions::new().append(true).open(&path).await?
@@ -441,7 +439,7 @@ impl DownloadManager {
             .video_files
             .iter()
             .find(|file| match quality {
-                VideoQuality::HD => file.quality == "hd" || file.quality == "hd",
+                VideoQuality::HD => file.quality == "hd" || file.quality == "HD",
                 VideoQuality::SD => file.quality == "sd",
                 VideoQuality::Tiny => {
                     file.file_type == "video/mp4"

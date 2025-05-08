@@ -1,5 +1,4 @@
 use crate::{Orientation, Size};
-use std::fmt::Display;
 
 #[derive(Debug, Clone, Default)]
 pub struct SearchParams {

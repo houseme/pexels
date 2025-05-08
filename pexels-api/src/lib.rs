@@ -110,6 +110,9 @@ pub use videos::video::FetchVideoBuilder;
 pub use client::PexelsClient;
 pub use search::SearchParams;
 
+pub use download::DownloadManager;
+pub use download::ProgressCallback;
+
 /// import crate
 use reqwest::Client;
 use reqwest::Error as ReqwestError;
