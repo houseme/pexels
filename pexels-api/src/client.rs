@@ -142,7 +142,7 @@ impl PexelsClient {
             StatusCode::UNAUTHORIZED => Err(PexelsError::AuthError("Invalid API key".to_string())),
             StatusCode::TOO_MANY_REQUESTS => Err(PexelsError::RateLimitError),
             status => {
-                Err(PexelsError::ApiError(format!("Search photos failed with status: {}", status)))
+                Err(PexelsError::ApiError(format!("Search photos failed with status: {status}")))
             }
         }
     }
@@ -181,7 +181,7 @@ impl PexelsClient {
             StatusCode::UNAUTHORIZED => Err(PexelsError::AuthError("Invalid API key".to_string())),
             StatusCode::TOO_MANY_REQUESTS => Err(PexelsError::RateLimitError),
             status => {
-                Err(PexelsError::ApiError(format!("Curated photos failed with status: {}", status)))
+                Err(PexelsError::ApiError(format!("Curated photos failed with status: {status}")))
             }
         }
     }
@@ -206,12 +206,12 @@ impl PexelsClient {
                 Ok(photo)
             }
             StatusCode::NOT_FOUND => {
-                Err(PexelsError::NotFound(format!("Photo with ID {} not found", id)))
+                Err(PexelsError::NotFound(format!("Photo with ID {id} not found")))
             }
             StatusCode::UNAUTHORIZED => Err(PexelsError::AuthError("Invalid API key".to_string())),
             StatusCode::TOO_MANY_REQUESTS => Err(PexelsError::RateLimitError),
             status => {
-                Err(PexelsError::ApiError(format!("Get photo failed with status: {}", status)))
+                Err(PexelsError::ApiError(format!("Get photo failed with status: {status}")))
             }
         }
     }
@@ -267,7 +267,7 @@ impl PexelsClient {
             StatusCode::UNAUTHORIZED => Err(PexelsError::AuthError("Invalid API key".to_string())),
             StatusCode::TOO_MANY_REQUESTS => Err(PexelsError::RateLimitError),
             status => {
-                Err(PexelsError::ApiError(format!("Search videos failed with status: {}", status)))
+                Err(PexelsError::ApiError(format!("Search videos failed with status: {status}")))
             }
         }
     }
@@ -306,7 +306,7 @@ impl PexelsClient {
             StatusCode::UNAUTHORIZED => Err(PexelsError::AuthError("Invalid API key".to_string())),
             StatusCode::TOO_MANY_REQUESTS => Err(PexelsError::RateLimitError),
             status => {
-                Err(PexelsError::ApiError(format!("Popular videos failed with status: {}", status)))
+                Err(PexelsError::ApiError(format!("Popular videos failed with status: {status}")))
             }
         }
     }
@@ -331,12 +331,12 @@ impl PexelsClient {
                 Ok(video)
             }
             StatusCode::NOT_FOUND => {
-                Err(PexelsError::NotFound(format!("Video with ID {} not found", id)))
+                Err(PexelsError::NotFound(format!("Video with ID {id} not found")))
             }
             StatusCode::UNAUTHORIZED => Err(PexelsError::AuthError("Invalid API key".to_string())),
             StatusCode::TOO_MANY_REQUESTS => Err(PexelsError::RateLimitError),
             status => {
-                Err(PexelsError::ApiError(format!("Get video failed with status: {}", status)))
+                Err(PexelsError::ApiError(format!("Get video failed with status: {status}")))
             }
         }
     }
@@ -375,8 +375,7 @@ impl PexelsClient {
             StatusCode::UNAUTHORIZED => Err(PexelsError::AuthError("Invalid API key".to_string())),
             StatusCode::TOO_MANY_REQUESTS => Err(PexelsError::RateLimitError),
             status => Err(PexelsError::ApiError(format!(
-                "Get collections failed with status: {}",
-                status
+                "Get collections failed with status: {status}"
             ))),
         }
     }
@@ -415,13 +414,12 @@ impl PexelsClient {
                 Ok(media_page)
             }
             StatusCode::NOT_FOUND => {
-                Err(PexelsError::NotFound(format!("Collection with ID {} not found", id)))
+                Err(PexelsError::NotFound(format!("Collection with ID {id} not found")))
             }
             StatusCode::UNAUTHORIZED => Err(PexelsError::AuthError("Invalid API key".to_string())),
             StatusCode::TOO_MANY_REQUESTS => Err(PexelsError::RateLimitError),
             status => Err(PexelsError::ApiError(format!(
-                "Get collection media failed with status: {}",
-                status
+                "Get collection media failed with status: {status}"
             ))),
         }
     }

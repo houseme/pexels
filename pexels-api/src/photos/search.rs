@@ -33,18 +33,17 @@ impl<'a> Hex<'a> {
     #[allow(clippy::should_implement_trait)]
     pub fn from_borrowed_str(v: &'a str) -> Result<Self, PexelsError> {
         if v.len() != 7 {
-            return Err(PexelsError::HexColorCodeError(format!("{} is not 7 characters long.", v)));
+            return Err(PexelsError::HexColorCodeError(format!("{v} is not 7 characters long.")));
         }
 
         if !v.starts_with("#") {
-            return Err(PexelsError::HexColorCodeError(format!("{} does not start with #.", v)));
+            return Err(PexelsError::HexColorCodeError(format!("{v} does not start with #.")));
         }
 
         // 检查是否为有效的 ASCII 字符
         if !v[1..].chars().all(|c| c.is_ascii_hexdigit()) {
             return Err(PexelsError::HexColorCodeError(format!(
-                "{} have values that are not valid ASCII punctuation character.",
-                v
+                "{v} have values that are not valid ASCII punctuation character."
             )));
         }
 
@@ -111,7 +110,7 @@ impl<'a> Search<'a> {
 
     /// Creates a URI from the search parameters. [`SearchBuilder`].
     pub fn create_uri(&self) -> crate::BuilderResult {
-        let uri = format!("{}/{}/{}", PEXELS_API, PEXELS_VERSION, PEXELS_PHOTO_SEARCH_PATH);
+        let uri = format!("{PEXELS_API}/{PEXELS_VERSION}/{PEXELS_PHOTO_SEARCH_PATH}");
 
         let mut url = Url::parse(uri.as_str())?;
         url.query_pairs_mut().append_pair("query", self.query);

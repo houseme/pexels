@@ -22,7 +22,7 @@ impl Popular {
 
     /// Creates a URI from the provided parameters.
     pub fn create_uri(&self) -> crate::BuilderResult {
-        let uri = format!("{}/{}/{}", PEXELS_API, PEXELS_VIDEO_PATH, PEXELS_POPULAR_PATH);
+        let uri = format!("{PEXELS_API}/{PEXELS_VIDEO_PATH}/{PEXELS_POPULAR_PATH}");
 
         let mut url = Url::parse(uri.as_str())?;
 

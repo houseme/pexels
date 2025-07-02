@@ -17,7 +17,7 @@ impl Collections {
 
     /// Constructs the URI for the collections request based on the builder's parameters.
     pub fn create_uri(&self) -> crate::BuilderResult {
-        let uri = format!("{}/{}/{}", PEXELS_API, PEXELS_VERSION, PEXELS_COLLECTIONS_PATH);
+        let uri = format!("{PEXELS_API}/{PEXELS_VERSION}/{PEXELS_COLLECTIONS_PATH}");
 
         let mut url = Url::parse(uri.as_str())?;
 

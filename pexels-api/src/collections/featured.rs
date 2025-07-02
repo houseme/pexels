@@ -21,8 +21,7 @@ impl Featured {
     /// Constructs the URI for the featured collections request based on the [`FeaturedBuilder`] builder's parameters.
     pub fn create_uri(&self) -> crate::BuilderResult {
         let uri = format!(
-            "{}/{}/{}/{}",
-            PEXELS_API, PEXELS_VERSION, PEXELS_COLLECTIONS_PATH, PEXELS_FEATURED_PATH
+            "{PEXELS_API}/{PEXELS_VERSION}/{PEXELS_COLLECTIONS_PATH}/{PEXELS_FEATURED_PATH}"
         );
 
         let mut url = Url::parse(uri.as_str())?;

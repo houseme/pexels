@@ -18,7 +18,7 @@ impl Curated {
 
     /// Create URI from inputted vales from the [`CuratedBuilder`].
     pub fn create_uri(&self) -> crate::BuilderResult {
-        let uri = format!("{}/{}/{}", PEXELS_API, PEXELS_VERSION, PEXELS_CURATED_PATH);
+        let uri = format!("{PEXELS_API}/{PEXELS_VERSION}/{PEXELS_CURATED_PATH}");
 
         let mut url = Url::parse(uri.as_str())?;
 

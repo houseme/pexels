@@ -185,7 +185,7 @@ impl Display for Orientation {
             Orientation::Portrait => "portrait".to_string(),
             Orientation::Square => "square".to_string(),
         };
-        write!(f, "{}", str)
+        write!(f, "{str}")
     }
 }
 
@@ -438,7 +438,7 @@ impl Display for Size {
             Size::Medium => "medium".to_string(),
             Size::Small => "small".to_string(),
         };
-        write!(f, "{}", str)
+        write!(f, "{str}")
     }
 }
 

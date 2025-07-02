@@ -167,7 +167,7 @@ impl DownloadManager {
                         range_start = metadata.len();
                         headers.insert(
                             header::RANGE,
-                            format!("bytes={}-", range_start).parse().unwrap(),
+                            format!("bytes={range_start}-").parse().unwrap(),
                         );
                     }
                 }
@@ -220,8 +220,8 @@ impl DownloadManager {
         for result in results {
             match result {
                 Ok(Ok(path)) => successful_downloads.push(path),
-                Ok(Err(e)) => eprintln!("Download error: {}", e),
-                Err(e) => eprintln!("Task join error: {}", e),
+                Ok(Err(e)) => eprintln!("Download error: {e}"),
+                Err(e) => eprintln!("Task join error: {e}"),
             }
         }
 
@@ -295,7 +295,7 @@ impl DownloadManager {
                         range_start = metadata.len();
                         headers.insert(
                             header::RANGE,
-                            format!("bytes={}-", range_start).parse().unwrap(),
+                            format!("bytes={range_start}-").parse().unwrap(),
                         );
                     }
                 }
@@ -348,8 +348,8 @@ impl DownloadManager {
         for result in results {
             match result {
                 Ok(Ok(path)) => successful_downloads.push(path),
-                Ok(Err(e)) => eprintln!("Download error: {}", e),
-                Err(e) => eprintln!("Task join error: {}", e),
+                Ok(Err(e)) => eprintln!("Download error: {e}"),
+                Err(e) => eprintln!("Task join error: {e}"),
             }
         }
 
@@ -386,7 +386,7 @@ impl DownloadManager {
         if path.exists() {
             if let Ok(metadata) = fs::metadata(&path).await {
                 range_start = metadata.len();
-                headers.insert(header::RANGE, format!("bytes={}-", range_start).parse().unwrap());
+                headers.insert(header::RANGE, format!("bytes={range_start}-").parse().unwrap());
             }
         }
 

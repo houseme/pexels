@@ -63,7 +63,7 @@ mod tests {
     use super::*;
     use dotenvy::dotenv;
     use std::env;
-    use tokio;
+    
 
     #[test]
     fn test_id() {
@@ -79,7 +79,7 @@ mod tests {
 
         let get_photo = FetchPhoto::builder().id(10967).build();
         let result = get_photo.fetch(&client).await;
-        println!("get_photo result: {:?}", result);
+        println!("get_photo result: {result:?}");
         assert!(result.is_ok());
     }
 }
