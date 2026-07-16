@@ -17,10 +17,7 @@ readme = "README.md"
 pexels-api.workspace = true
 clap.workspace = true
 dotenvy.workspace = true
-tokio.workspace = true
-
-[dev-dependencies]
-tokio.workspace = true
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 
 [[bin]]
 name = "pexels-cli"
