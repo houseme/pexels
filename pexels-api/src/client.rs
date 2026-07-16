@@ -101,7 +101,7 @@ impl PexelsClient {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```rust,no_run
     /// use pexels_api::{PexelsClient, SearchParams,Size};
     ///
     /// #[tokio::main]

@@ -25,7 +25,7 @@ Done! Now you can use this API wrapper.
 
 This example shows how to get the list of *mountains* photos.
 
-```rust
+```rust,no_run
 use dotenvy::dotenv;
 use std::env;
 use pexels_api::{Pexels, SearchBuilder};
@@ -531,7 +531,7 @@ impl PartialEq for PexelsError {
 /// Client for interacting with the Pexels API
 ///
 /// # Example
-/// ```rust
+/// ```rust,no_run
 /// use dotenvy::dotenv;
 /// use pexels_api::Pexels;
 /// use std::env;
@@ -548,7 +548,7 @@ impl PartialEq for PexelsError {
 /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
 ///
 /// # Example
-/// ```rust
+/// ```rust,no_run
 /// use dotenvy::dotenv;
 /// use pexels_api::Pexels;
 /// use pexels_api::SearchBuilder;
@@ -575,7 +575,7 @@ impl Pexels {
     /// * `api_key` - The API key for the Pexels API.
     ///
     /// # Example
-    /// ```rust
+    /// ```rust,no_run
     /// use dotenvy::dotenv;
     /// use pexels_api::Pexels;
     /// use std::env;
@@ -617,7 +617,7 @@ impl Pexels {
     /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
     ///
     /// # Example
-    /// ```rust
+    /// ```rust,no_run
     /// use dotenvy::dotenv;
     /// use pexels_api::Pexels;
     /// use pexels_api::SearchBuilder;
@@ -648,7 +648,7 @@ impl Pexels {
     /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
     ///
     /// # Example
-    /// ```rust
+    /// ```rust,no_run
     /// use dotenvy::dotenv;
     /// use pexels_api::Pexels;
     /// use std::env;
@@ -675,7 +675,7 @@ impl Pexels {
     /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.  
     ///
     /// # Example
-    /// ```rust
+    /// ```rust,no_run
     /// use dotenvy::dotenv;
     /// use pexels_api::Pexels;
     /// use pexels_api::CuratedBuilder;
@@ -706,7 +706,7 @@ impl Pexels {
     /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
     ///
     /// # Example
-    /// ```rust
+    /// ```rust,no_run
     /// use dotenvy::dotenv;
     /// use pexels_api::Pexels;
     /// use pexels_api::VideoSearchBuilder;
@@ -737,7 +737,7 @@ impl Pexels {
     /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
     ///
     /// # Example
-    /// ```rust
+    /// ```rust,no_run
     /// use dotenvy::dotenv;
     /// use pexels_api::Pexels;
     /// use pexels_api::PopularBuilder;
@@ -768,7 +768,7 @@ impl Pexels {
     /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
     ///
     /// # Example
-    /// ```rust
+    /// ```rust,no_run
     /// use dotenvy::dotenv;
     /// use pexels_api::Pexels;
     /// use std::env;
@@ -796,7 +796,7 @@ impl Pexels {
     /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
     ///
     /// # Example
-    /// ```rust
+    /// ```rust,no_run
     /// use dotenvy::dotenv;
     /// use pexels_api::Pexels;
     /// use std::env;
@@ -828,7 +828,7 @@ impl Pexels {
     /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
     ///
     /// # Example
-    /// ```rust
+    /// ```rust,no_run
     /// use dotenvy::dotenv;
     /// use pexels_api::Pexels;
     /// use std::env;
@@ -859,7 +859,7 @@ impl Pexels {
     /// Returns a `PexelsError` if the request fails or the response cannot be parsed as JSON.
     ///
     /// # Example
-    /// ```rust
+    /// ```rust,no_run
     /// use dotenvy::dotenv;
     /// use pexels_api::Pexels;
     /// use pexels_api::MediaBuilder;
@@ -874,6 +874,7 @@ impl Pexels {
     ///     let response = client.search_media(builder).await.expect("Failed to get media");
     ///     println!("{:?}", response);
     /// }                 
+    /// ```
     pub async fn search_media(&self, builder: MediaBuilder) -> Result<MediaResponse, PexelsError> {
         builder.build().fetch(self).await
     }
@@ -926,6 +927,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore = "requires PEXELS_API_KEY and live Pexels API access"]
     async fn test_make_request() {
         dotenv().ok();
         let api_key = std::env::var("PEXELS_API_KEY").expect("PEXELS_API_KEY not set");
