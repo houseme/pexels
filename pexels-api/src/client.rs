@@ -3,7 +3,9 @@ use std::time::Duration;
 use url::Url;
 
 use crate::models::{CollectionsPage, MediaPage, Photo, PhotosPage, Video, VideosPage};
-use crate::search::{PaginationParams, SearchParams, VideoSearchParams};
+use crate::search::{
+    CollectionMediaParams, PaginationParams, PopularVideoParams, SearchParams, VideoSearchParams,
+};
 use crate::PexelsError;
 
 /// Main client for the Pexels API
@@ -162,14 +164,7 @@ impl PexelsClient {
     ) -> Result<PhotosPage, PexelsError> {
         let mut url = Url::parse(&format!("{}/curated", self.base_url))?;
 
-        // Add pagination parameters
-        if let Some(page) = params.page {
-            url.query_pairs_mut().append_pair("page", &page.to_string());
-        }
-
-        if let Some(per_page) = params.per_page {
-            url.query_pairs_mut().append_pair("per_page", &per_page.to_string());
-        }
+        self.append_query_params(&mut url, params.to_query_params());
 
         let response = self.send_request(url).await?;
 
@@ -234,26 +229,7 @@ impl PexelsClient {
         // Add query parameter
         url.query_pairs_mut().append_pair("query", query);
 
-        // Add all search parameters from VideoSearchParams
-        if let Some(page) = params.page {
-            url.query_pairs_mut().append_pair("page", &page.to_string());
-        }
-
-        if let Some(per_page) = params.per_page {
-            url.query_pairs_mut().append_pair("per_page", &per_page.to_string());
-        }
-
-        if let Some(ref orientation) = params.orientation {
-            url.query_pairs_mut().append_pair("orientation", orientation.as_str());
-        }
-
-        if let Some(ref size) = params.size {
-            url.query_pairs_mut().append_pair("size", size.as_str());
-        }
-
-        if let Some(ref locale) = params.locale {
-            url.query_pairs_mut().append_pair("locale", locale);
-        }
+        self.append_query_params(&mut url, params.to_query_params());
 
         let response = self.send_request(url).await?;
 
@@ -283,16 +259,26 @@ impl PexelsClient {
         &self,
         params: &PaginationParams,
     ) -> Result<VideosPage, PexelsError> {
+        let params = PopularVideoParams::from_pagination(params);
+        self.popular_videos_with_params(&params).await
+    }
+
+    /// Fetch popular videos with documented filters.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - Pagination, size and duration filters
+    ///
+    /// # Returns
+    ///
+    /// A Result containing the popular videos response or an error
+    pub async fn popular_videos_with_params(
+        &self,
+        params: &PopularVideoParams,
+    ) -> Result<VideosPage, PexelsError> {
         let mut url = Url::parse(&format!("{}/videos/popular", self.base_url))?;
 
-        // Add pagination parameters
-        if let Some(page) = params.page {
-            url.query_pairs_mut().append_pair("page", &page.to_string());
-        }
-
-        if let Some(per_page) = params.per_page {
-            url.query_pairs_mut().append_pair("per_page", &per_page.to_string());
-        }
+        self.append_query_params(&mut url, params.to_query_params());
 
         let response = self.send_request(url).await?;
 
@@ -352,14 +338,7 @@ impl PexelsClient {
     ) -> Result<CollectionsPage, PexelsError> {
         let mut url = Url::parse(&format!("{}/collections", self.base_url))?;
 
-        // Add pagination parameters
-        if let Some(page) = params.page {
-            url.query_pairs_mut().append_pair("page", &page.to_string());
-        }
-
-        if let Some(per_page) = params.per_page {
-            url.query_pairs_mut().append_pair("per_page", &per_page.to_string());
-        }
+        self.append_query_params(&mut url, params.to_query_params());
 
         let response = self.send_request(url).await?;
 
@@ -373,6 +352,38 @@ impl PexelsClient {
             status => {
                 Err(PexelsError::ApiError(format!("Get collections failed with status: {status}")))
             }
+        }
+    }
+
+    /// Get featured collections list
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - Pagination parameters
+    ///
+    /// # Returns
+    ///
+    /// A Result containing the featured collections response or an error
+    pub async fn get_featured_collections(
+        &self,
+        params: &PaginationParams,
+    ) -> Result<CollectionsPage, PexelsError> {
+        let mut url = Url::parse(&format!("{}/collections/featured", self.base_url))?;
+
+        self.append_query_params(&mut url, params.to_query_params());
+
+        let response = self.send_request(url).await?;
+
+        match response.status() {
+            StatusCode::OK => {
+                let collections_page: CollectionsPage = response.json().await?;
+                Ok(collections_page)
+            }
+            StatusCode::UNAUTHORIZED => Err(PexelsError::AuthError("Invalid API key".to_string())),
+            StatusCode::TOO_MANY_REQUESTS => Err(PexelsError::RateLimitError),
+            status => Err(PexelsError::ApiError(format!(
+                "Get featured collections failed with status: {status}"
+            ))),
         }
     }
 
@@ -391,16 +402,28 @@ impl PexelsClient {
         id: &str,
         params: &PaginationParams,
     ) -> Result<MediaPage, PexelsError> {
+        let params = CollectionMediaParams::from_pagination(params);
+        self.get_collection_media_with_params(id, &params).await
+    }
+
+    /// Get collection media items (photos and videos) with documented filters
+    ///
+    /// # Arguments
+    ///
+    /// * `id` - The collection ID
+    /// * `params` - Pagination, media type and sort filters
+    ///
+    /// # Returns
+    ///
+    /// A Result containing the media response or an error
+    pub async fn get_collection_media_with_params(
+        &self,
+        id: &str,
+        params: &CollectionMediaParams,
+    ) -> Result<MediaPage, PexelsError> {
         let mut url = Url::parse(&format!("{}/collections/{}", self.base_url, id))?;
 
-        // Add pagination parameters
-        if let Some(page) = params.page {
-            url.query_pairs_mut().append_pair("page", &page.to_string());
-        }
-
-        if let Some(per_page) = params.per_page {
-            url.query_pairs_mut().append_pair("per_page", &per_page.to_string());
-        }
+        self.append_query_params(&mut url, params.to_query_params());
 
         let response = self.send_request(url).await?;
 
@@ -417,6 +440,12 @@ impl PexelsClient {
             status => Err(PexelsError::ApiError(format!(
                 "Get collection media failed with status: {status}"
             ))),
+        }
+    }
+
+    fn append_query_params(&self, url: &mut Url, params: Vec<(String, String)>) {
+        for (key, value) in params {
+            url.query_pairs_mut().append_pair(&key, &value);
         }
     }
 

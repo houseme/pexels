@@ -108,7 +108,9 @@ pub use videos::video::FetchVideo;
 pub use videos::video::FetchVideoBuilder;
 
 pub use client::PexelsClient;
-pub use search::SearchParams;
+pub use search::{
+    CollectionMediaParams, PaginationParams, PopularVideoParams, SearchParams, VideoSearchParams,
+};
 
 pub use download::DownloadManager;
 pub use download::ProgressCallback;
@@ -200,14 +202,14 @@ impl Display for Orientation {
 /// let sort = MediaSort::from_str("asc").unwrap();
 /// assert_eq!(sort, MediaSort::Asc);
 /// ```
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 pub enum MediaSort {
     Asc,
     Desc,
 }
 
 impl MediaSort {
-    fn as_str(&self) -> &str {
+    pub(crate) fn as_str(&self) -> &str {
         match self {
             MediaSort::Asc => "asc",
             MediaSort::Desc => "desc",
@@ -242,7 +244,7 @@ impl FromStr for MediaSort {
 ///     Err(e) => eprintln!("Error parsing media type: {:?}", e),
 /// }
 /// ```
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 pub enum MediaType {
     Photo,
     Video,
@@ -250,7 +252,7 @@ pub enum MediaType {
 }
 
 impl MediaType {
-    fn as_str(&self) -> &str {
+    pub(crate) fn as_str(&self) -> &str {
         match self {
             MediaType::Photo => "photos",
             MediaType::Video => "videos",
@@ -264,8 +266,8 @@ impl FromStr for MediaType {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
-            "photo" => Ok(MediaType::Photo),
-            "video" => Ok(MediaType::Video),
+            "photo" | "photos" => Ok(MediaType::Photo),
+            "video" | "videos" => Ok(MediaType::Video),
             "" => Ok(MediaType::Empty),
             _ => Err(PexelsError::ParseMediaTypeError),
         }

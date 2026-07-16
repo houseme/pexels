@@ -72,17 +72,22 @@ Here is a basic example of how to use the `pexels-api` library:
 
 ```rust
 use dotenvy::dotenv;
-use pexels_api::{Pexels, MediaType, MediaSort};
+use pexels_api::{
+    CollectionMediaParams, MediaSort, MediaType, PaginationParams, PexelsClient,
+    PopularVideoParams, SearchParams, VideoSearchParams,
+};
 use std::env;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
     let api_key = env::var("PEXELS_API_KEY")?;
-    let client = Pexels::new(api_key);
+    let client = PexelsClient::new(api_key);
 
     // Search for photos
-    let photos = client.search_photos("nature", 10, 1).await?;
+    let photos = client
+        .search_photos("nature", &SearchParams::new().per_page(10).page(1))
+        .await?;
     for photo in photos.photos {
         println!("{:?}", photo);
     }
@@ -92,23 +97,44 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("{:?}", photo);
 
     // Search for videos
-    let videos = client.search_videos("nature", 10, 1).await?;
+    let videos = client
+        .search_videos("nature", &VideoSearchParams::new().per_page(10).page(1))
+        .await?;
     for video in videos.videos {
         println!("{:?}", video);
     }
+
+    // Fetch popular videos with documented filters
+    let popular_videos = client
+        .popular_videos_with_params(
+            &PopularVideoParams::new().per_page(10).page(1).min_width(1280).min_duration(5),
+        )
+        .await?;
+    println!("{:?}", popular_videos);
 
     // Get a video by ID
     let video = client.get_video(3401900).await?;
     println!("{:?}", video);
 
-    // Search for collections
-    let collections = client.search_collections(10, 1).await?;
+    // List featured collections
+    let collections = client
+        .get_featured_collections(&PaginationParams::new().per_page(10).page(1))
+        .await?;
     for collection in collections.collections {
         println!("{:?}", collection);
     }
 
-    // Search for media
-    let media_response = client.search_media("nature", 10, 1, MediaType::Photo, MediaSort::Latest).await?;
+    // Fetch collection media with type and sort filters
+    let media_response = client
+        .get_collection_media_with_params(
+            "tszhfva",
+            &CollectionMediaParams::new()
+                .per_page(10)
+                .page(1)
+                .media_type(MediaType::Photo)
+                .sort(MediaSort::Desc),
+        )
+        .await?;
     for media in media_response.media {
         println!("{:?}", media);
     }

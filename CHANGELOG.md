@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added
+
+- Added documented `PexelsClient` support for featured collections, popular video filters, and collection media `type`/`sort` filters.
+
+### Changed
+
+- Split CI tests into default offline-safe tests and optional live Pexels API tests that run only when `PEXELS_API_KEY` is configured.
+
 ## [0.1.0] - 2026-07-16
 
 ### Changed
