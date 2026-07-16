@@ -10,7 +10,7 @@ resolver = "2"
 opt-level = 3
 
 [workspace.package]
-version = "0.0.5"
+version = "0.1.0"
 authors = ["https://github.com/houseme"]
 edition = "2021"
 rust-version = "1.80.0"
@@ -27,7 +27,7 @@ categories = ["web-programming", "development-tools", "asynchronous", "network-p
 clap = { version = "4.6.0", features = ["derive"] }
 dotenvy = "0.15.7"
 futures = "0.3.32"
-pexels-api = { path = "./pexels-api", version = "0.0.5" }
+pexels-api = { path = "./pexels-api", version = "0.1.0" }
 reqwest = { version = "0.13.4", default-features = false, features = ["json", "rustls", "charset", "http2", "system-proxy", "stream", "query", "form"] }
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.150"

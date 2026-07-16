@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-07-16
+
 ### Changed
 
 - Updated `workflows` Config file
