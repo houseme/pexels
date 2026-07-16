@@ -63,7 +63,6 @@ mod tests {
     use super::*;
     use dotenvy::dotenv;
     use std::env;
-    
 
     #[test]
     fn test_id() {

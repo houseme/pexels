@@ -210,9 +210,7 @@ impl PexelsClient {
             }
             StatusCode::UNAUTHORIZED => Err(PexelsError::AuthError("Invalid API key".to_string())),
             StatusCode::TOO_MANY_REQUESTS => Err(PexelsError::RateLimitError),
-            status => {
-                Err(PexelsError::ApiError(format!("Get photo failed with status: {status}")))
-            }
+            status => Err(PexelsError::ApiError(format!("Get photo failed with status: {status}"))),
         }
     }
 
@@ -335,9 +333,7 @@ impl PexelsClient {
             }
             StatusCode::UNAUTHORIZED => Err(PexelsError::AuthError("Invalid API key".to_string())),
             StatusCode::TOO_MANY_REQUESTS => Err(PexelsError::RateLimitError),
-            status => {
-                Err(PexelsError::ApiError(format!("Get video failed with status: {status}")))
-            }
+            status => Err(PexelsError::ApiError(format!("Get video failed with status: {status}"))),
         }
     }
 
@@ -374,9 +370,9 @@ impl PexelsClient {
             }
             StatusCode::UNAUTHORIZED => Err(PexelsError::AuthError("Invalid API key".to_string())),
             StatusCode::TOO_MANY_REQUESTS => Err(PexelsError::RateLimitError),
-            status => Err(PexelsError::ApiError(format!(
-                "Get collections failed with status: {status}"
-            ))),
+            status => {
+                Err(PexelsError::ApiError(format!("Get collections failed with status: {status}")))
+            }
         }
     }
 
