@@ -130,7 +130,10 @@ use url::ParseError;
 const PEXELS_VERSION: &str = "v1";
 
 /// Path for videos
-const PEXELS_VIDEO_PATH: &str = "videos";
+/// The versioned video API path documented by Pexels.
+///
+/// Pexels is deprecating the legacy `/videos/` endpoints in favor of `/v1/videos/`.
+const PEXELS_VIDEO_PATH: &str = "v1/videos";
 
 /// Path for collections
 const PEXELS_COLLECTIONS_PATH: &str = "collections";

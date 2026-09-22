@@ -136,20 +136,23 @@ mod tests {
     #[test]
     fn test_query() {
         let uri = SearchBuilder::new().query("bar").build();
-        assert_eq!("https://api.pexels.com/videos/search?query=bar", uri.create_uri().unwrap());
+        assert_eq!("https://api.pexels.com/v1/videos/search?query=bar", uri.create_uri().unwrap());
     }
 
     #[test]
     fn test_page() {
         let uri = SearchBuilder::new().page(1).build();
-        assert_eq!("https://api.pexels.com/videos/search?query=&page=1", uri.create_uri().unwrap());
+        assert_eq!(
+            "https://api.pexels.com/v1/videos/search?query=&page=1",
+            uri.create_uri().unwrap()
+        );
     }
 
     #[test]
     fn test_per_page() {
         let uri = SearchBuilder::new().per_page(1).build();
         assert_eq!(
-            "https://api.pexels.com/videos/search?query=&per_page=1",
+            "https://api.pexels.com/v1/videos/search?query=&per_page=1",
             uri.create_uri().unwrap()
         );
     }
@@ -158,7 +161,7 @@ mod tests {
     fn test_orientation() {
         let uri = SearchBuilder::new().orientation(Orientation::Landscape).build();
         assert_eq!(
-            "https://api.pexels.com/videos/search?query=&orientation=landscape",
+            "https://api.pexels.com/v1/videos/search?query=&orientation=landscape",
             uri.create_uri().unwrap()
         );
     }
@@ -167,7 +170,7 @@ mod tests {
     fn test_size() {
         let uri = SearchBuilder::new().size(Size::Small).build();
         assert_eq!(
-            "https://api.pexels.com/videos/search?query=&size=small",
+            "https://api.pexels.com/v1/videos/search?query=&size=small",
             uri.create_uri().unwrap()
         );
     }
@@ -176,7 +179,7 @@ mod tests {
     fn test_locale() {
         let uri = SearchBuilder::new().locale(Locale::sv_SE).build();
         assert_eq!(
-            "https://api.pexels.com/videos/search?query=&locale=sv-SE",
+            "https://api.pexels.com/v1/videos/search?query=&locale=sv-SE",
             uri.create_uri().unwrap()
         );
     }

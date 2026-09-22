@@ -64,6 +64,6 @@ mod tests {
     #[test]
     fn test_id() {
         let uri = FetchVideoBuilder::new().id(123).build();
-        assert_eq!("https://api.pexels.com/videos/videos/123", uri.create_uri().unwrap());
+        assert_eq!("https://api.pexels.com/v1/videos/videos/123", uri.create_uri().unwrap());
     }
 }

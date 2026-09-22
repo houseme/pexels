@@ -135,20 +135,26 @@ mod tests {
     #[test]
     fn test_min_width() {
         let uri = PopularBuilder::new().min_width(1).build();
-        assert_eq!("https://api.pexels.com/videos/popular?min_width=1", uri.create_uri().unwrap());
+        assert_eq!(
+            "https://api.pexels.com/v1/videos/popular?min_width=1",
+            uri.create_uri().unwrap()
+        );
     }
 
     #[test]
     fn test_min_height() {
         let uri = PopularBuilder::new().min_height(1).build();
-        assert_eq!("https://api.pexels.com/videos/popular?min_height=1", uri.create_uri().unwrap());
+        assert_eq!(
+            "https://api.pexels.com/v1/videos/popular?min_height=1",
+            uri.create_uri().unwrap()
+        );
     }
 
     #[test]
     fn test_min_duration() {
         let uri = PopularBuilder::new().min_duration(10).build();
         assert_eq!(
-            "https://api.pexels.com/videos/popular?min_duration=10",
+            "https://api.pexels.com/v1/videos/popular?min_duration=10",
             uri.create_uri().unwrap()
         );
     }
@@ -157,7 +163,7 @@ mod tests {
     fn test_max_duration() {
         let uri = PopularBuilder::new().max_duration(100).build();
         assert_eq!(
-            "https://api.pexels.com/videos/popular?max_duration=100",
+            "https://api.pexels.com/v1/videos/popular?max_duration=100",
             uri.create_uri().unwrap()
         );
     }
@@ -165,12 +171,15 @@ mod tests {
     #[test]
     fn test_page() {
         let uri = PopularBuilder::new().page(1).build();
-        assert_eq!("https://api.pexels.com/videos/popular?page=1", uri.create_uri().unwrap());
+        assert_eq!("https://api.pexels.com/v1/videos/popular?page=1", uri.create_uri().unwrap());
     }
 
     #[test]
     fn test_per_page() {
         let uri = PopularBuilder::new().per_page(1).build();
-        assert_eq!("https://api.pexels.com/videos/popular?per_page=1", uri.create_uri().unwrap());
+        assert_eq!(
+            "https://api.pexels.com/v1/videos/popular?per_page=1",
+            uri.create_uri().unwrap()
+        );
     }
 }
